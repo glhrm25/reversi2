@@ -1,10 +1,10 @@
 import model.*
+import ui.show
 
 /* TO-DO LIST:
     -> Safety check of users input
     -> Game.kt:
         -- game.show(): Change $turn for the right player symbol
-                        Change directory of the function???
     ->
  */
 
@@ -16,7 +16,7 @@ fun main() {
         print("> ")
 
         val input = readln().trim().uppercase().split(' ') // TO-DO: Safety checks of users input
-        when (val cmd = input[0]) {
+        when (val command = input[0]) {
             "NEW" -> {
                 val firstTurn = input[1][0]
                 val name = input[2]
@@ -43,12 +43,12 @@ fun main() {
                 /*
                 Controlo da visualização das posições possíveis para jogar. Argumento: ON ou OFF
                 para ligar ou desligar a visualização ou sem argumento para mostrar o estado da
-                visualização. O estado da visualização mantém-se durante todo o jogo.
+                visualização. O estado da visualização mantém-se durante tdo o jogo.
                  */
             }
             "SHOW" -> game?.show()
             "EXIT" -> break
-            else -> println("Invalid command $cmd")
+            else -> println("Invalid command $command")
         }
 
         // game?.show()
