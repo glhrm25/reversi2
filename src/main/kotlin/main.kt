@@ -1,7 +1,11 @@
-import Model.*
+import model.*
 
 /* TO-DO LIST:
-    -> Verificação dos inputs do utilizador
+    -> Safety check of users input
+    -> Game.kt:
+        -- game.show(): Change $turn for the right player symbol
+                        Change directory of the function???
+    ->
  */
 
 fun main() {
@@ -11,15 +15,23 @@ fun main() {
     while(true) {
         print("> ")
 
-        val input = readln().trim().uppercase().split(' ')
+        val input = readln().trim().uppercase().split(' ') // TO-DO: Safety checks of users input
         when (val cmd = input[0]) {
             "NEW" -> {
                 val firstTurn = input[1][0]
                 val name = input[2]
                 game = game?.new() ?: Game(firstTurn = firstTurn, name = name)
             }
-           // "JOIN" -> game = game?.join()
-            //"PLAY" -> game?.play()
+            //"JOIN" -> game = game?.join()
+            "PLAY" -> {
+                val move = input[1]
+                val row = move[0].digitToIntOrNull() ?: -1
+                val cell = Cell(row, move[1])
+                if (row != -1 && cell.toBoardIndex() in 0.. BOARD_CELLS){
+                    game = game?.play(cell)
+                }
+                else println("Invalid move: $move")
+            }
             "PASS" -> {
                 /*
                 Passa a vez para o adversário se não for possível fazer uma jogada.
@@ -31,7 +43,7 @@ fun main() {
                 /*
                 Controlo da visualização das posições possíveis para jogar. Argumento: ON ou OFF
                 para ligar ou desligar a visualização ou sem argumento para mostrar o estado da
-                visualização. O estado da visualização mantém-se durante tod o jogo.
+                visualização. O estado da visualização mantém-se durante todo o jogo.
                  */
             }
             "SHOW" -> game?.show()
