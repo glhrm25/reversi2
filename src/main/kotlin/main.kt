@@ -1,5 +1,5 @@
 import model.*
-import ui.show
+import ui.*
 
 /* TO-DO LIST:
     -> Safety check of users input
@@ -12,6 +12,30 @@ fun main() {
 
     var game: Game? = null
 
+    val cmds: Map<String, Command> = getCommands()
+
+    while(true) {
+        // Retorna uma data class onde o primeiro componente da class vai para "name" e o segundo para "args".
+        val (name, args) = readCommand()
+
+        val command = cmds[name]
+        if (command == null) println("Invalid command $name")
+        else try { // Tenta executar o código e caso haja uma exceção, resolve o código dos catch caso seja a exceção correta
+
+            // Lança uma exceção caso não consiga executar o comando, caso contrário, retorna o game atualizado
+            game = command.execute(args, game)
+            if (command.isTerminate) return
+            game?.show()
+        } catch (ex: IllegalArgumentException) {
+            println(ex.message)
+            println("Use $name ${command.syntaxArgs}")
+        } catch (ex: IllegalStateException) {
+            println(ex.message)
+        }
+
+    }
+
+/*
     while(true) {
         print("> ")
 
@@ -53,6 +77,6 @@ fun main() {
 
         // game?.show()
     }
-
+*/
     println("Game ended")
 }
