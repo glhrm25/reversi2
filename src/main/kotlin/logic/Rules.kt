@@ -1,33 +1,23 @@
 package logic
 import model.*
 
+private val directions = listOf(
+    1, -1,
+    BOARD_SIZE, -BOARD_SIZE,
+    BOARD_SIZE + 1, -BOARD_SIZE + 1,
+    BOARD_SIZE - 1, -BOARD_SIZE - 1,
+)
+
 /*
 fun Game.targets(): List<Int> {
-/*
-isValidMove(board, x, y, player):
-    se posição fora do tabuleiro → falso
-    se célula ocupada → falso
-    para cada direção (dx, dy):
-        anda uma casa nessa direção
-        se encontrar 0 ou mais peças do adversário
-        e depois uma peça do jogador → verdadeiro
-    se nenhuma direção deu verdadeiro → falso
- */
 
 
 }
- */
+*/
 fun Game.validMoves(): List<Int> {
 
     val list = mutableSetOf<Int>()
     val opponent = turn.otherPlayer()
-
-    val directions = listOf(
-        1, -1,
-        BOARD_SIZE, -BOARD_SIZE,
-        BOARD_SIZE + 1, -BOARD_SIZE + 1,
-        BOARD_SIZE - 1, -BOARD_SIZE - 1,
-    )
 
     for (p in board.indices) {
         if (board[p] == null) {
@@ -50,6 +40,7 @@ fun Game.validMoves(): List<Int> {
                             opponent -> {}
                             else -> break
                         }
+
                         i += d
                     }
                 }
@@ -65,14 +56,6 @@ fun Game.turnMoves(move: Int): List<Player?> {
 
     val list = mutableListOf<MutableList<Int>>()
     val opponent = turn.otherPlayer()
-
-    val directions = listOf(
-        1, -1,
-        BOARD_SIZE, -BOARD_SIZE,
-        BOARD_SIZE + 1, -BOARD_SIZE + 1,
-        BOARD_SIZE - 1, -BOARD_SIZE - 1,
-    )
-
 
     for (d in directions) {
         val pd = move + d
@@ -95,15 +78,14 @@ fun Game.turnMoves(move: Int): List<Player?> {
                     }
                     else -> break
                 }
+
                 i += d
             }
         }
     }
 
     val turnList = list.flatten().distinct() + move
-    return board.mapIndexed{
-        idx, player -> if (idx in turnList) turn else player
-    }
+    return board.mapIndexed{ idx, player -> if (idx in turnList) turn else player }
 }
 
 private fun sameRow(a: Int, b: Int): Boolean =

@@ -37,41 +37,33 @@ object Show: Command() {
         return game
     }
 }
-/*
+
 object Pass: Command() {
-    override fun execute(args: List<String>, game: Game?): Game? {
-        // CHECK POSSIBLE PLAY !!
-            val passed = game?.hasPreviousPassed ?: false
-            if (passed) {
-                game.getGameWinner()
-            }
-            return game?.copy(hasPreviousPassed = true)
-        }
-}
+/*
+    Passa a vez para o adversário se não for possível fazer uma jogada.
+    O jogo termina caso o adversário também tenha passado na vez anterior.
 */
+}
+
+
+object Targets: Command(){
+/*
+    Controlo da visualização das posições possíveis para jogar. Argumento: ON ou OFF
+    para ligar ou desligar a visualização ou sem argumento para mostrar o estado da
+    visualização. O estado da visualização mantém-se durante tdo o jogo.
+*/
+}
 
 fun getCommands(): Map<String, Command> = mapOf(
     "EXIT" to Command(isTerminate = true),
     "NEW" to New,
     "PLAY" to Play,
     "SHOW" to Show,
-    //"PASS" to Pass,
+    "PASS" to Pass,
+    "TARGETS" to Targets,
 )
 
     /*
-
-            "JOIN" -> game = game?.join()
-            "REFRESH" -> game = game?.refresh()
-            "TARGETS" -> {
-                /*
-                Controlo da visualização das posições possíveis para jogar. Argumento: ON ou OFF
-                para ligar ou desligar a visualização ou sem argumento para mostrar o estado da
-                visualização. O estado da visualização mantém-se durante tdo o jogo.
-                 */
-            }
-            "PASS" -> {
-
-                Passa a vez para o adversário se não for possível fazer uma jogada.
-                O jogo termina caso o adversário também tenha passado na vez anterior.
-            }
+"JOIN" -> game = game?.join()
+"REFRESH" -> game = game?.refresh()
      */

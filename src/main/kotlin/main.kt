@@ -8,16 +8,14 @@ import user_interface.*
                         Possibly put everything into one only println?
 
     -> Game.kt:
-       -- game.play(): Finish function with the final game logic.
        -- game.new(): Corrigir a extração do argumento "name", que deve ser "local" quando este não for especificado
 
     -> Cell.kt:
         -- Correct "bug" where Cell columns need to be treated has uppercase letters.
 
     -> Rules.kt:
-        -- Upgrade functions validMoves() and turnMoves()... efficiency.
+        -- Upgrade functions validMoves() and turnMoves() efficiency.
 
-    -> Finish Game logic
     -> Finish the implementation of all the possible commands
 
  */

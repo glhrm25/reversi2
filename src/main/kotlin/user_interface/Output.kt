@@ -5,6 +5,7 @@ import model.Player.*
 const val BLACK_SYMBOL = '#'
 const val WHITE_SYMBOL = '@'
 const val EMPTY_SYMBOL = '.'
+const val TARGETS_SYMBOL = '?'
 
 fun Game.show() {
     println("You are player ${turn.symbol()} in game $name.") // Change first $turn.symbol for the right player symbol when multiplayer

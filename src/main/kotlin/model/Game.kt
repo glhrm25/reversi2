@@ -11,7 +11,8 @@ data class Game(
     val board: List<Player?> = generateBoard(),
     val firstTurn: Player,
     val turn: Player = firstTurn,
-    val hasPreviousPassed: Boolean = false,
+    //val hasPreviousPassed: Boolean = false,
+    //val toggleTargets: Boolean = false,
 )
 
 fun Game.new(): Game = Game(name = name, firstTurn = firstTurn.otherPlayer())
@@ -22,7 +23,6 @@ fun Game.play(move: Cell): Game {
     check(pos in validMoves()){"Invalid move $move."}
 
     return this.copy(
-        //board = board.mapIndexed { idx, player -> if (idx == pos) turn else player },
         board = turnMoves(pos),
         turn = turn.otherPlayer(),
     )
