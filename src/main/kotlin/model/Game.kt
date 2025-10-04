@@ -1,5 +1,6 @@
 package model
 import model.Player.*
+import logic.*
 
 const val BOARD_SIZE = 8 // Sets the number of rows and columns of the board
 const val BOARD_CELLS = BOARD_SIZE * BOARD_SIZE
@@ -17,10 +18,12 @@ fun Game.new(): Game = Game(name = name, firstTurn = firstTurn.otherPlayer())
 
 fun Game.play(move: Cell): Game {
     val pos = move.toBoardIndex()
-    check(board[pos] == EMPTY) { "Cell $move already occupied." }
+    //check(board[pos] == EMPTY) { "Cell $move already occupied." }
+    check(pos in validMoves()){"Invalid move $move."}
 
     return this.copy(
-        board = board.mapIndexed { idx, player -> if (idx == move.toBoardIndex()) turn else player },
+        //board = board.mapIndexed { idx, player -> if (idx == pos) turn else player },
+        board = turnMoves(pos),
         turn = turn.otherPlayer(),
     )
 }
