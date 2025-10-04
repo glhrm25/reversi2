@@ -10,7 +10,6 @@ open class Command (
 
 object New: Command("<FirstTurn> <Name>"){
     override fun execute(args: List<String>, game: Game?): Game {
-
         require(args.size == 2) {"Invalid Arguments."}
 
         val first = args.first()
@@ -38,34 +37,41 @@ object Show: Command() {
         return game
     }
 }
+/*
+object Pass: Command() {
+    override fun execute(args: List<String>, game: Game?): Game? {
+        // CHECK POSSIBLE PLAY !!
+            val passed = game?.hasPreviousPassed ?: false
+            if (passed) {
+                game.getGameWinner()
+            }
+            return game?.copy(hasPreviousPassed = true)
+        }
+}
+*/
 
 fun getCommands(): Map<String, Command> = mapOf(
     "EXIT" to Command(isTerminate = true),
     "NEW" to New,
     "PLAY" to Play,
     "SHOW" to Show,
+    //"PASS" to Pass,
 )
 
     /*
-                "NEW" -> {
-                val firstTurn = input[1][0]
-                val name = input[2]
-                game = game?.new() ?: Game(firstTurn = firstTurn, name = name)
-            }
-            //"JOIN" -> game = game?.join()
 
-            "PASS" -> {
-                /*
-                Passa a vez para o adversário se não for possível fazer uma jogada.
-                O jogo termina caso o adversário também tenha passado na vez anterior.
-                */
-            }
-            //"REFRESH" -> game = game?.refresh()
+            "JOIN" -> game = game?.join()
+            "REFRESH" -> game = game?.refresh()
             "TARGETS" -> {
                 /*
                 Controlo da visualização das posições possíveis para jogar. Argumento: ON ou OFF
                 para ligar ou desligar a visualização ou sem argumento para mostrar o estado da
                 visualização. O estado da visualização mantém-se durante tdo o jogo.
                  */
+            }
+            "PASS" -> {
 
+                Passa a vez para o adversário se não for possível fazer uma jogada.
+                O jogo termina caso o adversário também tenha passado na vez anterior.
+            }
      */

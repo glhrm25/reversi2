@@ -8,8 +8,7 @@ import user_interface.*
                         Possibly put everything into one only println?
 
     -> Game.kt:
-       -- game.play(): Finish function with the game logic.
-       -- generateBoard(): Rewrite function so it doesn't repeat the same operations (Like BOARD_SIZE/2 or BOARD_SIZE/2 + 1)
+       -- game.play(): Finish function with the final game logic.
 
     -> Cell.kt:
         -- Correct "bug" where Cell columns need to be treated has uppercase letters.
