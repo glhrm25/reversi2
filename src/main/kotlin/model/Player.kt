@@ -6,6 +6,6 @@ enum class Player {
     BLACK, WHITE
 }
 
-fun Player.otherPlayer(): Player = if (this == BLACK) WHITE else BLACK
+val Player.otherPlayer: Player get() = if (this == BLACK) WHITE else BLACK
 
 fun Char.player(): Player = if (this == BLACK_SYMBOL) BLACK else WHITE

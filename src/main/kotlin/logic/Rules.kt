@@ -17,7 +17,7 @@ fun Game.targets(): List<Int> {
 fun Game.validMoves(): List<Int> {
 
     val list = mutableSetOf<Int>()
-    val opponent = turn.otherPlayer()
+    val opponent = turn.otherPlayer
 
     for (p in board.indices) {
         if (board[p] == null) {
@@ -55,7 +55,7 @@ fun Game.validMoves(): List<Int> {
 fun Game.turnMoves(move: Int): List<Player?> {
 
     val list = mutableListOf<MutableList<Int>>()
-    val opponent = turn.otherPlayer()
+    val opponent = turn.otherPlayer
 
     for (d in directions) {
         val pd = move + d

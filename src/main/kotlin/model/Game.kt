@@ -15,7 +15,7 @@ data class Game(
     //val toggleTargets: Boolean = false,
 )
 
-fun Game.new(): Game = Game(name = name, firstTurn = firstTurn.otherPlayer())
+fun Game.new(): Game = Game(name = name, firstTurn = firstTurn.otherPlayer)
 
 fun Game.play(move: Cell): Game {
     val pos = move.toBoardIndex()
@@ -24,7 +24,7 @@ fun Game.play(move: Cell): Game {
 
     return this.copy(
         board = turnMoves(pos),
-        turn = turn.otherPlayer(),
+        turn = turn.otherPlayer,
     )
 }
 
