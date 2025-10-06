@@ -18,7 +18,7 @@ object New: Command("<FirstTurn> <Name>"){
         val symbol = first.first()
         require(symbol == BLACK_SYMBOL || symbol == WHITE_SYMBOL){"Invalid symbol $first."}
 
-        return game?.new() ?: Game(firstTurn = symbol.player(), name = args.drop(1).first())
+        return game?.new() ?: Game(turn = symbol.player(), name = args.drop(1).first())
     }
 }
 

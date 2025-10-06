@@ -5,10 +5,11 @@ import user_interface.*
 
     -> Output.kt: (LATER ON THE PROJECT)
         -- game.show(): Change first $turn.symbol for the right player symbol when multiplayer
-                        Possibly put everything into one only println?
+                        Possibly put everything into one only println ???
 
     -> Game.kt:
-       -- game.new(): Corrigir a extração do argumento "name", que deve ser "local" quando este não for especificado
+       -- Game class: Possibly take board out of the primary constructor ???
+       -- game.new(): Fix the extraction of argument "name". Must be "local" when not specified.
 
     -> Cell.kt:
         -- Correct "bug" where Cell columns need to be treated has uppercase letters.

@@ -8,18 +8,17 @@ private val EMPTY = null
 
 data class Game(
     val name: String,
-    val board: List<Player?> = generateBoard(),
-    val firstTurn: Player,
-    val turn: Player = firstTurn,
+    val board: List<Player?> = generateBoard(), // Possibly take board out of the primary constructor ???
+    val turn: Player,
     //val hasPreviousPassed: Boolean = false,
     //val toggleTargets: Boolean = false,
 )
 
-fun Game.new(): Game = Game(name = name, firstTurn = firstTurn.otherPlayer)
+fun Game.new(): Game = Game(name = name, turn = turn.otherPlayer)
 
 fun Game.play(move: Cell): Game {
     val pos = move.toBoardIndex()
-    //check(board[pos] == EMPTY) { "Cell $move already occupied." }
+    check(board[pos] == EMPTY) { "Cell $move already occupied." }
     check(pos in validMoves()){"Invalid move $move."}
 
     return this.copy(
