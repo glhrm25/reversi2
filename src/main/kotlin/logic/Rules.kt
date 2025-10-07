@@ -2,18 +2,12 @@ package logic
 import model.*
 
 private val directions = listOf(
-    1, -1,
-    BOARD_SIZE, -BOARD_SIZE,
-    BOARD_SIZE + 1, -BOARD_SIZE + 1,
-    BOARD_SIZE - 1, -BOARD_SIZE - 1,
+    1, -1,  // Horizontal
+    BOARD_SIZE, -BOARD_SIZE, // Vertical
+    BOARD_SIZE + 1, -BOARD_SIZE - 1, // left to right diagonal
+    BOARD_SIZE - 1, -BOARD_SIZE + 1, // right to left diagonal
 )
 
-/*
-fun Game.targets(): List<Int> {
-
-
-}
-*/
 fun Game.validMoves(): List<Int> {
 
     val list = mutableSetOf<Int>()
@@ -52,7 +46,7 @@ fun Game.validMoves(): List<Int> {
 }
 
 
-fun Game.turnMoves(move: Int): List<Player?> {
+fun Game.turnMoves(move: Int): List<Int> {
 
     val list = mutableSetOf<MutableList<Int>>()
     val opponent = turn.otherPlayer
@@ -85,7 +79,8 @@ fun Game.turnMoves(move: Int): List<Player?> {
     }
 
     val turnList = list.flatten().distinct() + move
-    return board.mapIndexed{ idx, player -> if (idx in turnList) turn else player }
+    //return board.mapIndexed{ idx, player -> if (idx in turnList) turn else player }
+    return turnList
 }
 
 private fun sameRow(a: Int, b: Int): Boolean =

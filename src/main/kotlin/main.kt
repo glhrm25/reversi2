@@ -7,6 +7,8 @@ import user_interface.*
         -- game.show(): Change first $turn.symbol for the right player symbol when multiplayer
                         Possibly put everything into one only println ???
 
+        -- Rewrite the logic behind the targets command.
+
     -> Game.kt:
        -- Game class: Possibly take board out of the primary constructor ???
        -- game.new(): Fix the extraction of argument "name". Must be "local" when not specified.

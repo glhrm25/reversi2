@@ -47,11 +47,8 @@ object Pass: Command() {
 
 
 object Targets: Command(){
-/*
-    Controlo da visualização das posições possíveis para jogar. Argumento: ON ou OFF
-    para ligar ou desligar a visualização ou sem argumento para mostrar o estado da
-    visualização. O estado da visualização mantém-se durante tdo o jogo.
-*/
+    override fun execute(args: List<String>, game: Game?): Game? =
+        game?.copy(toggleTargets = !game.toggleTargets)
 }
 
 fun getCommands(): Map<String, Command> = mapOf(
@@ -59,8 +56,8 @@ fun getCommands(): Map<String, Command> = mapOf(
     "NEW" to New,
     "PLAY" to Play,
     "SHOW" to Show,
-    "PASS" to Pass,
-    "TARGETS" to Targets,
+    "PASS" to Pass, // NOT IMPLEMENTED YET
+    "TARGETS" to Targets, // NOT IMPLEMENTED YET
 )
 
     /*

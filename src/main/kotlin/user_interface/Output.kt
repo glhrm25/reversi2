@@ -1,4 +1,5 @@
 package user_interface
+import logic.validMoves
 import model.*
 import model.Player.*
 
@@ -10,9 +11,12 @@ const val TARGETS_SYMBOL = '?'
 fun Game.show() {
     println("You are player ${turn.symbol()} in game $name.") // Change first $turn.symbol for the right player symbol when multiplayer
     println("  " + COLUMNS.joinToString(" "))
-    board.chunked(BOARD_SIZE).forEachIndexed{ idx, row ->
+    board.mapIndexed{ idx, player ->
+        if ((idx in validMoves()) && toggleTargets) TARGET else player
+    }.chunked(BOARD_SIZE).forEachIndexed{ idx, row ->
         println("${idx+1} ${row.joinToString(" "){"${it.symbol()}"}}")
     }
+
     println("$BLACK_SYMBOL =  ${board.count { c -> c == BLACK }} | $WHITE_SYMBOL =  ${board.count { c -> c == WHITE }}")
     println("Turn: ${turn.symbol()}")
 } // Possibly put everything into one only println?
@@ -21,5 +25,6 @@ fun Player?.symbol(): Char =
     when (this) {
         BLACK -> BLACK_SYMBOL
         WHITE -> WHITE_SYMBOL
+        TARGET -> TARGETS_SYMBOL
         else -> EMPTY_SYMBOL
     }
