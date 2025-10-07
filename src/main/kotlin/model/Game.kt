@@ -14,6 +14,7 @@ data class Game(
     val toggleTargets: Boolean = false,
 )
 
+// If game already exists, new game is created with same name and the opposite player has first turn.
 fun Game.new(): Game = Game(name = name, turn = turn.otherPlayer)
 
 fun Game.play(move: Cell): Game {

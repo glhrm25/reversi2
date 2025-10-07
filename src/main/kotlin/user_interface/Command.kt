@@ -10,15 +10,17 @@ open class Command (
 
 object New: Command("<FirstTurn> <Name>"){
     override fun execute(args: List<String>, game: Game?): Game {
-        require(args.size == 2) {"Invalid Arguments."}
+        require(args.isNotEmpty()) {"Invalid Arguments."}
 
         val first = args.first()
-        require(first.length == 1) {"Invalid argument $first"}
+        require(first.length == 1) {"Invalid argument $first"} // If argument is not a character
 
         val symbol = first.first()
-        require(symbol == BLACK_SYMBOL || symbol == WHITE_SYMBOL){"Invalid symbol $first."}
+        require(symbol == BLACK_SYMBOL || symbol == WHITE_SYMBOL){"Invalid symbol $first."} // If symbol is not a valid symbol
 
-        return game?.new() ?: Game(turn = symbol.player(), name = args.drop(1).first())
+        val argName = args.drop(1) // if name not specified then game is a local game
+
+        return game?.new() ?: Game(turn = symbol.player(), name = if (argName.isNotEmpty()) argName.first() else "local")
     }
 }
 

@@ -7,7 +7,9 @@ import user_interface.*
         -- game.show(): Change first $turn.symbol for the right player symbol when multiplayer
                         Possibly put everything into one only println ???
 
-        -- Rewrite the logic behind the targets command.
+        -- game.new(): Rethink logic of creating a new game when a game has already been created.
+
+        -- Rewrite the logic behind the targets command. (TARGET should not be part of player class)
 
     -> Game.kt:
        -- Game class: Possibly take board out of the primary constructor ???
