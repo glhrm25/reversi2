@@ -5,9 +5,6 @@ import user_interface.*
 
     -> Output.kt: (LATER ON THE PROJECT)
         -- game.show(): Change first $turn.symbol for the right player symbol when multiplayer
-                        Possibly put everything into one only println ???
-
-        -- game.new(): Rethink logic of creating a new game when a game has already been created.
 
         -- Rewrite the logic behind the targets command. (TARGET should not be part of player class)
 
@@ -16,7 +13,8 @@ import user_interface.*
        -- game.new(): Fix the extraction of argument "name". Must be "local" when not specified.
 
     -> Cell.kt:
-        -- Correct "bug" where Cell columns need to be treated has uppercase letters.
+        -- Rename this class to Position.
+        -- Possibly make this a private constructor ???
 
     -> Rules.kt:
         -- Upgrade functions validMoves() and turnMoves() efficiency.

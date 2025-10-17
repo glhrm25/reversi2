@@ -8,63 +8,47 @@ private val directions = listOf(
     BOARD_SIZE - 1, -BOARD_SIZE + 1, // right to left diagonal
 )
 
-fun Game.validMoves(): List<Int> {
+fun Game.validMoves(): List<Cell> {
 
-    val list = mutableSetOf<Int>()
+    val list = mutableSetOf<Cell>()
     val opponent = turn.otherPlayer
 
-    for (p in board.indices) {
-        if (board[p] == null) {
+    for (p in board) {
+        if (p.value == opponent) {
             for (d in directions) {
-                val pd = p + d
+                val pd = p.key.index + d
 
-                if (pd in board.indices && board[pd] == opponent) {
-                    var i = pd
-                    while (i in board.indices){
-
-                        if (d == 1 || d == -1) {
-                            if (!sameRow(i, i - d)) break
-                        }
-
-                        when  (board[i]) {
-                            turn -> {
-                                list.add(p)
-                                break
-                            }
-                            opponent -> {}
-                            else -> break
-                        }
-
-                        i += d
+                if (pd in 0 until BOARD_CELLS && board[Cell(pd)] == null) {
+                    if (this.turnMoves(Cell(pd)).isNotEmpty()) {
+                        list.add(Cell(pd))
                     }
                 }
             }
         }
     }
-
     return list.toList()
 }
 
-
-fun Game.turnMoves(move: Int): List<Int> {
+fun Game.turnMoves(move: Cell): List<Pair<Cell, Player>> {
 
     val list = mutableSetOf<MutableList<Int>>()
     val opponent = turn.otherPlayer
 
+    val idx = move.index
     for (d in directions) {
-        val pd = move + d
+        val pd = idx + d
 
-        if (pd in board.indices && board[pd] == opponent) {
+        if (pd in 0 until BOARD_CELLS && board[Cell(pd)] == opponent) {
             val l = mutableListOf<Int>()
             l.add(pd)
             var i = pd
-            while (i in board.indices){
+            while (i in 0 until BOARD_CELLS){
 
                 if (d == 1 || d == -1) {
                     if (!sameRow(i, i - d)) break
                 }
 
-                when (board[i]) {
+                when (board[Cell(i)]) {
                     opponent -> l.add(i)
                     turn -> {
                         list += l
@@ -78,9 +62,9 @@ fun Game.turnMoves(move: Int): List<Int> {
         }
     }
 
-    val turnList = list.flatten().distinct() + move
+    val turnList = list.flatten().distinct()
     //return board.mapIndexed{ idx, player -> if (idx in turnList) turn else player }
-    return turnList
+    return turnList.map { Pair(Cell(it), turn) }
 }
 
 private fun sameRow(a: Int, b: Int): Boolean =
