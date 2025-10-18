@@ -5,16 +5,15 @@ import user_interface.*
 
     -> Output.kt: (LATER ON THE PROJECT)
         -- game.show(): Change first $turn.symbol for the right player symbol when multiplayer
-
         -- Rewrite the logic behind the targets command. (TARGET should not be part of player class)
 
     -> Game.kt:
        -- Game class: Possibly take board out of the primary constructor ???
-       -- game.new(): Fix the extraction of argument "name". Must be "local" when not specified.
+       -- Adjust board and position logic. (should position be converted to an index?)
+       -- Rethink Game class primary constructor
 
-    -> Cell.kt:
-        -- Rename this class to Position.
-        -- Possibly make this a private constructor ???
+    -> Position.kt:
+        -- What to do about the private constructor ???
 
     -> Rules.kt:
         -- Upgrade functions validMoves() and turnMoves() efficiency.

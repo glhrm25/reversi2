@@ -4,13 +4,16 @@ import model.*
 private val directions = listOf(
     1, -1,  // Horizontal
     BOARD_SIZE, -BOARD_SIZE, // Vertical
-    BOARD_SIZE + 1, -BOARD_SIZE - 1, // left to right diagonal
-    BOARD_SIZE - 1, -BOARD_SIZE + 1, // right to left diagonal
+    BOARD_SIZE + 1, -BOARD_SIZE - 1, // backslash
+    BOARD_SIZE - 1, -BOARD_SIZE + 1, // slash
 )
 
-fun Game.validMoves(): List<Cell> {
+fun Game.validMoves(): List<Position> {
 
-    val list = mutableSetOf<Cell>()
+    require(this.state is Run)
+    val turn = state.turn
+
+    val list = mutableSetOf<Position>()
     val opponent = turn.otherPlayer
 
     for (p in board) {
@@ -18,9 +21,9 @@ fun Game.validMoves(): List<Cell> {
             for (d in directions) {
                 val pd = p.key.index + d
 
-                if (pd in 0 until BOARD_CELLS && board[Cell(pd)] == null) {
-                    if (this.turnMoves(Cell(pd)).isNotEmpty()) {
-                        list.add(Cell(pd))
+                if (pd in 0 until BOARD_CELLS && board[Position(pd)] == null) {
+                    if (this.turnMoves(Position(pd)).isNotEmpty()) {
+                        list.add(Position(pd))
                     }
                 }
             }
@@ -29,7 +32,10 @@ fun Game.validMoves(): List<Cell> {
     return list.toList()
 }
 
-fun Game.turnMoves(move: Cell): List<Pair<Cell, Player>> {
+fun Game.turnMoves(move: Position): List<Pair<Position, Player>> {
+
+    require(this.state is Run)
+    val turn = state.turn
 
     val list = mutableSetOf<MutableList<Int>>()
     val opponent = turn.otherPlayer
@@ -38,7 +44,7 @@ fun Game.turnMoves(move: Cell): List<Pair<Cell, Player>> {
     for (d in directions) {
         val pd = idx + d
 
-        if (pd in 0 until BOARD_CELLS && board[Cell(pd)] == opponent) {
+        if (pd in 0 until BOARD_CELLS && board[Position(pd)] == opponent) {
             val l = mutableListOf<Int>()
             l.add(pd)
             var i = pd
@@ -48,7 +54,7 @@ fun Game.turnMoves(move: Cell): List<Pair<Cell, Player>> {
                     if (!sameRow(i, i - d)) break
                 }
 
-                when (board[Cell(i)]) {
+                when (board[Position(i)]) {
                     opponent -> l.add(i)
                     turn -> {
                         list += l
@@ -64,7 +70,7 @@ fun Game.turnMoves(move: Cell): List<Pair<Cell, Player>> {
 
     val turnList = list.flatten().distinct()
     //return board.mapIndexed{ idx, player -> if (idx in turnList) turn else player }
-    return turnList.map { Pair(Cell(it), turn) }
+    return turnList.map { Pair(Position(it), turn) }
 }
 
 private fun sameRow(a: Int, b: Int): Boolean =
