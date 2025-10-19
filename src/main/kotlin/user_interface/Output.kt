@@ -1,4 +1,5 @@
 package user_interface
+import logic.validMoves
 import model.*
 import model.Player.*
 
@@ -19,6 +20,8 @@ fun Game.show() {
 
     println("$BLACK_SYMBOL =  ${board.count{ (_, Player) -> Player == BLACK}} | $WHITE_SYMBOL =  ${board.count { (_, Player) -> Player == WHITE}}")
    // println("Turn: ${state.turn.symbol()}")
+    println("$state")
+    println(validMoves())
 }
 
 fun Player?.symbol(): Char =

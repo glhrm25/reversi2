@@ -1,4 +1,5 @@
 package user_interface
+import logic.validMoves
 import model.*
 
 class Command (
@@ -30,18 +31,26 @@ val play = Command("<position>") { args, game ->
     checkNotNull(game){"Game not created"}.play(arg.toBoardPosition())
 }
 
-val show = Command() { args, game ->
+val show = Command() {_, game ->
     game.also{ checkNotNull(game){"Game not created."}.show() }
 }
 
-val targets = Command(){ args, game -> game?.copy(toggleTargets = !game.toggleTargets) }
+val targets = Command(){_, game ->
+    checkNotNull(game){"Game not created"}
+    check(game.state is Run) {"Game has ended."}
+    game.copy(toggleTargets = !game.toggleTargets) // Game should not be null by this line ????
+}
+
+val pass = Command(){_, game ->
+    checkNotNull(game){"Game not created"}.pass()
+}
 
 fun getCommands(): Map<String, Command> = mapOf(
     "EXIT" to Command(isTerminate = true),
     "NEW" to new,
     "PLAY" to play,
     "SHOW" to show,
-    //"PASS" to pass, // NOT IMPLEMENTED YET
+    "PASS" to pass,
     "TARGETS" to targets,
 )
 

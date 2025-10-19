@@ -8,9 +8,10 @@ import user_interface.*
         -- Rewrite the logic behind the targets command. (TARGET should not be part of player class)
 
     -> Game.kt:
-       -- Game class: Possibly take board out of the primary constructor ???
+       -- Review Game class primary constructor
        -- Adjust board and position logic. (should position be converted to an index?)
-       -- Rethink Game class primary constructor
+       -- Game State should turn to "Draw" when there's no possible moves & players have the same amount of pieces or should it wait for "pass" command ?????
+       -- Fix bug on turnMoves and validMoves.
 
     -> Position.kt:
         -- What to do about the private constructor ???
@@ -18,8 +19,9 @@ import user_interface.*
     -> Rules.kt:
         -- Upgrade functions validMoves() and turnMoves() efficiency.
 
-    -> Finish the implementation of all the possible commands
-
+    -> Overall:
+        -- Finish the implementation of all the possible commands (Join and Refresh)
+        -- Review requires and checks
  */
 
 fun main() {
