@@ -2,24 +2,30 @@ package model
 import model.Player.*
 import logic.*
 
-const val BOARD_SIZE = 3 // Sets the number of rows and columns of the board
+const val BOARD_SIZE = 2 // Sets the number of rows and columns of the board
 const val BOARD_CELLS = BOARD_SIZE * BOARD_SIZE
 
 typealias Board = Map<Position, Player>
 //typealias Score = Map<Player?, Int>
 
 data class Game (
-    val firstTurn : Player = BLACK, // ????
+    val firstTurn : Player = BLACK,
     val board: Board = generateBoard(),
     val state: GameState = Run(firstTurn),
     //val score: Score = (Player.entries + null).associateWith { 0 }, // ????
-    val toggleTargets: Boolean = false, // ????
-    val hasPreviousPassed: Boolean = false, // ????
+    //val toggleTargets: Boolean = false,
+    //val hasPreviousPassed: Boolean = false,
     val name: String,
-)
+) {
+    // val validMoves get() = validMoves()
+}
 
 sealed class GameState
-data class Run(val turn: Player): GameState()
+data class Run(
+    val turn: Player,
+    val toggleTargets: Boolean = false,
+    val hasPreviousPassed: Boolean = false,
+): GameState()
 data class Win(val winner: Player): GameState()
 data object Draw: GameState()
 
@@ -31,10 +37,10 @@ fun Game.play(move: Position): Game {
     require(board[move] == null) { "Cell $move already occupied." }
     require(move in validMoves()){"Invalid move $move."}
 
+    val newState = updateState()
     return this.copy(
         board = board + (move to state.turn) + turnMoves(move),
-        state = updateState(),
-        hasPreviousPassed = false,
+        state = if (newState is Run) newState.copy(hasPreviousPassed = false) else newState,
     )
 }
 
@@ -43,13 +49,15 @@ fun Game.pass(): Game =
         check(state is Run) {"Game has ended."}
         check(validMoves().isEmpty()) { "There's possible moves for you to make." }
 
-        if (hasPreviousPassed)
+        if (state.hasPreviousPassed)
             copy(state = getEndState(board))
 
-        else copy(
-                hasPreviousPassed = true,
-                state = updateState()
-                )
+        else {
+            val newState = updateState()
+            copy(
+                state = if (newState is Run) newState.copy(hasPreviousPassed = true) else newState,
+            )
+        }
     }
 
 /**

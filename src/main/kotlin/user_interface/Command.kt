@@ -1,5 +1,4 @@
 package user_interface
-import logic.validMoves
 import model.*
 
 class Command (
@@ -31,17 +30,20 @@ val play = Command("<position>") { args, game ->
     checkNotNull(game){"Game not created"}.play(arg.toBoardPosition())
 }
 
-val show = Command() {_, game ->
+val show = Command {_, game ->
     game.also{ checkNotNull(game){"Game not created."}.show() }
 }
 
-val targets = Command(){_, game ->
+val targets = Command{_, game ->
     checkNotNull(game){"Game not created"}
-    check(game.state is Run) {"Game has ended."}
-    game.copy(toggleTargets = !game.toggleTargets) // Game should not be null by this line ????
+    with(game){
+        check(state is Run) {"Game has ended."}
+        copy(state = state.copy(toggleTargets = !state.toggleTargets))
+    }
 }
 
-val pass = Command(){_, game ->
+
+val pass = Command{_, game ->
     checkNotNull(game){"Game not created"}.pass()
 }
 
@@ -52,16 +54,6 @@ fun getCommands(): Map<String, Command> = mapOf(
     "SHOW" to show,
     "PASS" to pass,
     "TARGETS" to targets,
+    // "JOIN" to join,
+    // "REFRESH" to refresh,
 )
-
-    /*
-"JOIN" -> game = game?.join()
-"REFRESH" -> game = game?.refresh()
-
-    Passa a vez para o adversário se não for possível fazer uma jogada.
-    O jogo termina caso o adversário também tenha passado na vez anterior.
-val pass = Command(){ args, game ->
-    // TO-DO
-    game
-}
- */

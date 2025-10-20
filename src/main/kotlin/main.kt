@@ -3,15 +3,16 @@ import user_interface.*
 
 /* TO-DO LIST:
 
-    -> Output.kt: (LATER ON THE PROJECT)
+    -> Output.kt:
         -- game.show(): Change first $turn.symbol for the right player symbol when multiplayer
-        -- Rewrite the logic behind the targets command. (TARGET should not be part of player class)
+                        Review the turn println
 
     -> Game.kt:
        -- Review Game class primary constructor
        -- Adjust board and position logic. (should position be converted to an index?)
        -- Game State should turn to "Draw" when there's no possible moves & players have the same amount of pieces or should it wait for "pass" command ?????
        -- Fix bug on turnMoves and validMoves.
+       -- Review state updates on game.pass & game.play
 
     -> Position.kt:
         -- What to do about the private constructor ???
