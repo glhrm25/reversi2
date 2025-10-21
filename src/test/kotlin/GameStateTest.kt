@@ -1,7 +1,4 @@
-import kotlin.test.*
-import model.*
-
-class GameState {
+class GameStateTest {
     /*
     @Test fun initialGameState() {
         val game = Game()

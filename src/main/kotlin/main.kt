@@ -21,6 +21,7 @@ import user_interface.*
         -- Upgrade functions validMoves() and turnMoves() efficiency.
 
     -> Overall:
+        -- Finish the implementantion of the storage package
         -- Finish the implementation of all the possible commands (Join and Refresh)
         -- Review requires and checks
  */

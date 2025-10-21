@@ -1,5 +1,5 @@
 package storage
-/*
+
 import okio.*
 import okio.Path.Companion.toPath
 
@@ -33,9 +33,9 @@ class TextFileStorage<Key,Data>(
         (basePath / "$key.txt").fx()
 
     override fun create(k: Key, data: Data) =
-        withPath(k) { // "with" permite evitar escrever sempre o prefixo path. para as funções de extensão de path
+        withPath(k) {
             check(!exists()) { "File $k already exists" }
-            writeText(data)    // equivalente a path.writeText(data)
+            writeText(data)
         }
 
     override fun read(k: Key): Data? =
@@ -45,13 +45,13 @@ class TextFileStorage<Key,Data>(
 
     override fun update(k: Key, data: Data) =
         withPath(k) {
-            check(!exists()) {"File $k does not exist" }
+            check(exists()) {"File $k does not exist" }
             writeText(data)
         }
 
     override fun delete(k: Key) =
         withPath(k) {
-            check(!exists()) {"File $k does not exist" }
+            check(exists()) {"File $k does not exist" }
             delete()
         }
-}*/
+}
