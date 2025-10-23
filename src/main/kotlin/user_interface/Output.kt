@@ -9,7 +9,9 @@ const val EMPTY_SYMBOL = '.'
 const val TARGETS_SYMBOL = '?'
 
 fun Game.show() {
-    println("You are player ${pl.color.symbol()} in game $name.") // Change first $turn.symbol for the right player symbol when multiplayer
+    if (this.name == null && state is Run) println("You are player ${state.turn.symbol()} in local game.")
+    else println("You are player ${pl.color.symbol()} in game $name.")
+
     println("  " + COLUMNS.joinToString(" "))
     val validMoves = validMoves()
     Position.values
