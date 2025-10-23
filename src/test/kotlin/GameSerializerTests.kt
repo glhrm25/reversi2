@@ -13,7 +13,7 @@ class GameSerializerTests {
         assertEquals(game,GameSerializer.deserialize(s))
     }
     @Test fun serializeWinGame() {
-        val game = Game(name = "test", state = Win(Player.BLACK))
+        val game = Game(name = "test", state = Win(Color.BLACK))
         val s = GameSerializer.serialize(game)
         assertEquals(game,GameSerializer.deserialize(s))
     }

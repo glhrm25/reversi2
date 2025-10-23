@@ -15,11 +15,11 @@ object GameSerializer: Serializer<Game>{
         val (l1, l2, l3, l4) = text.split("\n")
         return Game(
             name = l1,
-            firstTurn = l2.toPlayer(),
+            firstTurn = l2.toColor(),
             state = StateSerializer.deserialize(l3),
             board = l4.split(' ').associate {
                 val (pos, pl) = it.split(':')
-                Position(pos.toInt()) to pl.toPlayer()
+                Position(pos.toInt()) to pl.toColor()
             },
         )
     }
@@ -31,9 +31,8 @@ object GameSerializer: Serializer<Game>{
 object StateSerializer: Serializer<GameState> {
     override fun serialize(data: GameState): String =
         when(data) {
-        //is Run -> "Run:${data.turn}"
             is Run -> buildString {
-                append("Run:${data.turn}-${data.toggleTargets}-${data.hasPreviousPassed}")
+                append("Run:${data.turn}-${data.hasPreviousPassed}")
             }
         is Win -> "Win:${data.winner}"
         is Draw -> "Draw:"
@@ -43,10 +42,10 @@ object StateSerializer: Serializer<GameState> {
         val (type, content) = text.split(":")
         return when(type){
             "Run" -> {
-                val (tr, tt, hpp) = content.split("-")
-                Run(Player.valueOf(tr), tt.toBoolean(), hpp.toBoolean())
+                val (tr, hpp) = content.split("-")
+                Run(Color.valueOf(tr), hpp.toBoolean())
             }
-            "Win" -> Win(Player.valueOf(content))
+            "Win" -> Win(Color.valueOf(content))
             "Draw"-> Draw
             else -> error("Invalid game state $type")
         }

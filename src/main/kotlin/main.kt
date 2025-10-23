@@ -3,36 +3,30 @@ import storage.TextFileStorage
 import user_interface.*
 
 /* TO-DO LIST:
-
-    -> Output.kt:
-        -- game.show(): Change first $turn.symbol for the right player symbol when multiplayer
-                        Review the turn println
-
     -> Game.kt:
        -- Review Game class primary constructor
        -- Adjust board and position logic. (should position be converted to an index?)
        -- Game State should turn to "Draw" when there's no possible moves & players have the same amount of pieces or should it wait for "pass" command ?????
-       -- Fix bug on turnMoves and validMoves.
-       -- Review gameState Run constructor. toggleTargets should be a property of Player and not Run Gamestate
 
     -> Position.kt:
         -- What to do about the private constructor ???
 
     -> Rules.kt:
         -- Upgrade functions validMoves() and turnMoves() efficiency.
+        -- Fix bug on turnMoves and validMoves.
 
     -> Overall:
-        -- Finish the implementantion of the storage package
-        -- Finish the implementation of all the possible commands (Join and Refresh)
         -- Review requires and checks
+        -- Finish details off Multiplayer:
+            What happens when a third instance tries to join ????
  */
 
 fun main() {
 
     var game: Game? = null
     val gameStorage = TextFileStorage<String, Game>("games", GameSerializer)
-    val cmds: Map<String, Command> = getCommands()
 
+    val cmds: Map<String, Command> = getCommands()
     while(true) {
         val (name, args) = readCommand()
 

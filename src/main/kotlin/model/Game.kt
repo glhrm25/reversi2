@@ -1,15 +1,16 @@
 package model
-import model.Player.*
+import model.Color.*
 import logic.*
 
 const val BOARD_SIZE = 8 // Sets the number of rows and columns of the board
 const val BOARD_CELLS = BOARD_SIZE * BOARD_SIZE
 
-typealias Board = Map<Position, Player>
+typealias Board = Map<Position, Color>
 //typealias Score = Map<Player?, Int>
 
 data class Game (
-    val firstTurn : Player = BLACK,
+    val firstTurn : Color = BLACK,
+    val pl : Player = Player(firstTurn),
     val board: Board = generateBoard(),
     val state: GameState = Run(firstTurn),
     //val score: Score = (Player.entries + null).associateWith { 0 }, // ????
@@ -18,20 +19,22 @@ data class Game (
     // val validMoves get() = validMoves()
 }
 
+data class Player(val color: Color, val toggleTargets: Boolean = false)
+
 sealed class GameState
 data class Run(
-    val turn: Player,
-    val toggleTargets: Boolean = false,
+    val turn: Color,
     val hasPreviousPassed: Boolean = false,
 ): GameState()
-data class Win(val winner: Player): GameState()
+data class Win(val winner: Color): GameState()
 data object Draw: GameState()
 
 // If game already exists, new game is created with same name and first turn corresponds to the opposite player
-fun Game.new(): Game = Game(name = name, firstTurn = firstTurn.otherPlayer)
+fun Game.new(): Game = Game(name = name, firstTurn = firstTurn.otherColor)
 
 fun Game.play(move: Position): Game {
     check(this.state is Run) {"Game has ended."}
+    if (this.name != null) check(state.turn == pl.color){"Not your turn"}
     require(board[move] == null) { "Cell $move already occupied." }
     require(move in validMoves()){"Invalid move $move."}
 
@@ -63,14 +66,14 @@ fun Game.pass(): Game =
  */
 private fun Game.updateState(): GameState =
     if (board.size != BOARD_CELLS && state is Run)
-        Run(state.turn.otherPlayer)
+        Run(state.turn.otherColor)
     else
         getEndState(board)
 
 /**
  * @return Player with the most amount of pieces on the board
  */
-private fun Board.mostCommonPieces(): Player? {
+private fun Board.mostCommonPieces(): Color? {
     val dif = this.count{ it.value == BLACK} - this.count{ it.value == WHITE}
     return when {
         dif > 0 -> BLACK
@@ -97,7 +100,7 @@ private fun getEndState(board: Board): GameState =
 private fun generateBoard(): Board {
     val middleColumn = BOARD_SIZE / 2
 
-   return emptyMap<Position, Player>() +
+   return emptyMap<Position, Color>() +
            (Position(toBoardIndex(middleColumn, COLUMNS[middleColumn])) to BLACK) +
            (Position(toBoardIndex(middleColumn + 1, COLUMNS[middleColumn - 1])) to BLACK) +
            (Position(toBoardIndex(middleColumn + 1, COLUMNS[middleColumn])) to WHITE) +

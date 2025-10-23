@@ -14,7 +14,7 @@ fun Game.validMoves(): List<Position> {
     val turn = state.turn
 
     val list = mutableSetOf<Position>()
-    val opponent = turn.otherPlayer
+    val opponent = turn.otherColor
 
     for (p in board) {
         if (p.value == opponent) {
@@ -32,13 +32,13 @@ fun Game.validMoves(): List<Position> {
     return list.toList()
 }
 
-fun Game.turnMoves(move: Position): List<Pair<Position, Player>> {
+fun Game.turnMoves(move: Position): List<Pair<Position, Color>> {
 
     require(this.state is Run)
     val turn = state.turn
 
     val list = mutableSetOf<MutableList<Int>>()
-    val opponent = turn.otherPlayer
+    val opponent = turn.otherColor
 
     val idx = move.index
     for (d in directions) {

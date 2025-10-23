@@ -36,7 +36,9 @@ private fun createGameFile(game: Game, gameStorage: GameStorage): Game =
         }
     }
 
-val new = Command("<FirstTurn> <Name>"){ args, game, gs ->
+private fun Boolean.toOnOrOff() = if (this) "On" else "Off"
+
+private val new = Command("<FirstTurn> <Name>"){ args, game, gs ->
     require(args.isNotEmpty()){"Missing arguments"}
     val argSymbol = args.first()
     require(argSymbol.length == 1) {"Invalid argument $argSymbol"} // If argument is not a character
@@ -51,7 +53,7 @@ val new = Command("<FirstTurn> <Name>"){ args, game, gs ->
     createGameFile(newGame, gs)
 }
 
-val play = Command("<position>") { args, game, gs ->
+private val play = Command("<position>") { args, game, gs ->
     val arg = requireNotNull(args.firstOrNull()) {"Missing position"}
    // val pos = requireNotNull(arg.toCellOrNull()) {"Invalid position $arg."}
     require(arg.length == 2) { "Invalid argument $arg." }
@@ -60,35 +62,38 @@ val play = Command("<position>") { args, game, gs ->
     updateGameFile(newGame, gs)
 }
 
-val show = Command {_, game, _ ->
+private val show = Command {_, game, _ ->
     game.also{ checkNotNull(game){"Game not created."}.show() }
 }
 
-val targets = Command{_, game, gs ->
+private val targets = Command("<ON/OFF>"){args, game, _ ->
     checkNotNull(game){"Game not created"}
-    with(game){
-        check(state is Run) {"Game has ended."}
-        val newGame = copy(state = state.copy(toggleTargets = !state.toggleTargets))
-        updateGameFile(newGame, gs)
-    }
+    check(args.isNotEmpty()){"Targets = ${game.pl.toggleTargets.toOnOrOff()}"}
+    val targets = args.first().uppercase()
+    require((targets == "ON") || (targets == "OFF")){"Invalid argument"}
+
+    game.copy(pl = game.pl.copy(
+        toggleTargets = targets == "ON"
+        )
+    )
 }
 
-val pass = Command{_, game, gs ->
+private val pass = Command{_, game, gs ->
     val newGame = checkNotNull(game){"Game not created"}.pass()
     updateGameFile(newGame, gs)
 }
 
-val join = Command("<Name>"){args, _, gs ->
+private val join = Command("<Name>"){args, _, gs ->
     require(args.isNotEmpty()){"Missing game's name"}
     val name = args.first()
     val game = gs.read(name)
-    checkNotNull(game){"Game $name is not running."}
+    checkNotNull(game){"Game $name is not running."}.copy(pl = Player(game.firstTurn.otherColor))
 }
 
-val refresh = Command{_, game, gs ->
+private val refresh = Command{_, game, gs ->
     checkNotNull(game){"Game is not running"}
     checkNotNull(game.name){"This command is not valid on a local game."}
-    gs.read(game.name)
+    gs.read(game.name)?.copy(pl = game.pl)
 }
 
 fun getCommands() = mapOf(

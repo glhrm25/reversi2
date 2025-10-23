@@ -1,7 +1,7 @@
 package user_interface
 import logic.validMoves
 import model.*
-import model.Player.*
+import model.Color.*
 
 const val BLACK_SYMBOL = '#'
 const val WHITE_SYMBOL = '@'
@@ -9,12 +9,12 @@ const val EMPTY_SYMBOL = '.'
 const val TARGETS_SYMBOL = '?'
 
 fun Game.show() {
-    //println("You are player ${turn.symbol()} in game $name.") // Change first $turn.symbol for the right player symbol when multiplayer
+    println("You are player ${pl.color.symbol()} in game $name.") // Change first $turn.symbol for the right player symbol when multiplayer
     println("  " + COLUMNS.joinToString(" "))
     val validMoves = validMoves()
     Position.values
         .map{
-            if (state is Run && this.state.toggleTargets && it in validMoves) TARGETS_SYMBOL
+            if (this.pl.toggleTargets && it in validMoves) TARGETS_SYMBOL
             else board[it].symbol()
         }
         .chunked(BOARD_SIZE)
@@ -22,12 +22,15 @@ fun Game.show() {
             println("${idx+1} ${row.joinToString(" ")}")
         }
 
-    println("$BLACK_SYMBOL =  ${board.count{ (_, Player) -> Player == BLACK}} | $WHITE_SYMBOL =  ${board.count { (_, Player) -> Player == WHITE}}")
-    println("Turn: ${state}")
-    //println(validMoves)
+    println("$BLACK_SYMBOL =  ${board.count{ (_, player) -> player == BLACK}} | $WHITE_SYMBOL =  ${board.count { (_, player) -> player == WHITE}}")
+    when (state) {
+        is Run -> println("Turn: ${state.turn.symbol()}")
+        is Win -> println("Winner: ${state.winner.symbol()}")
+        Draw -> println("Draw")
+    }
 }
 
-fun Player?.symbol(): Char =
+fun Color?.symbol(): Char =
     when (this) {
         BLACK -> BLACK_SYMBOL
         WHITE -> WHITE_SYMBOL
