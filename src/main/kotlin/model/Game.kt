@@ -2,7 +2,7 @@ package model
 import model.Player.*
 import logic.*
 
-const val BOARD_SIZE = 2 // Sets the number of rows and columns of the board
+const val BOARD_SIZE = 8 // Sets the number of rows and columns of the board
 const val BOARD_CELLS = BOARD_SIZE * BOARD_SIZE
 
 typealias Board = Map<Position, Player>
@@ -13,8 +13,6 @@ data class Game (
     val board: Board = generateBoard(),
     val state: GameState = Run(firstTurn),
     //val score: Score = (Player.entries + null).associateWith { 0 }, // ????
-    //val toggleTargets: Boolean = false,
-    //val hasPreviousPassed: Boolean = false,
     val name: String,
 ) {
     // val validMoves get() = validMoves()

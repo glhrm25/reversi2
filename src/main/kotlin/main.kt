@@ -1,4 +1,5 @@
 import model.*
+import storage.TextFileStorage
 import user_interface.*
 
 /* TO-DO LIST:
@@ -12,7 +13,7 @@ import user_interface.*
        -- Adjust board and position logic. (should position be converted to an index?)
        -- Game State should turn to "Draw" when there's no possible moves & players have the same amount of pieces or should it wait for "pass" command ?????
        -- Fix bug on turnMoves and validMoves.
-       -- Review state updates on game.pass & game.play
+       -- Review gameState Run constructor. Maybe redo player's class with those constructors???
 
     -> Position.kt:
         -- What to do about the private constructor ???
@@ -29,8 +30,8 @@ import user_interface.*
 fun main() {
 
     var game: Game? = null
-
-    val cmds: Map<String, Command> = getCommands()
+    val gameStorage = TextFileStorage<String, Game>("games", GameSerializer)
+    val cmds: Map<String, Command> = getCommands(gameStorage)
 
     while(true) {
         val (name, args) = readCommand()

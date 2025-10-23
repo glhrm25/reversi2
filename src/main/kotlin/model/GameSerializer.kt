@@ -3,18 +3,25 @@ package model
 import storage.Serializer
 object GameSerializer: Serializer<Game>{
     override fun serialize(data: Game): String =
-        with(data){
-            "name:${data.name}" +
-            "state:${StateSerializer.serialize(state)}" +
-            "firstTurn:$firstTurn" +
-            "board:$board"
+        buildString {
+            appendLine(data.name)
+            appendLine(data.firstTurn)
+            appendLine(StateSerializer.serialize(data.state))
+            appendLine(data.board.entries.joinToString(" "){ (k, v) -> "${k.index}:$v" })
         }
 
 
     override fun deserialize(text: String): Game {
-        val (name, state, firstTurn, board) = text.split(":")
-        println("name:$name, state:$state, firstTurn:$firstTurn, board:$board")
-        return Game(name = "A")
+        val (l1, l2, l3, l4) = text.split("\n")
+        return Game(
+            name = l1,
+            firstTurn = l2.toPlayer(),
+            state = StateSerializer.deserialize(l3),
+            board = l4.split(' ').associate {
+                val (pos, pl) = it.split(':')
+                Position(pos.toInt()) to pl.toPlayer()
+            },
+        )
     }
 }
 
@@ -24,16 +31,22 @@ object GameSerializer: Serializer<Game>{
 object StateSerializer: Serializer<GameState> {
     override fun serialize(data: GameState): String =
         when(data) {
-        is Run -> "Run:${data.turn}"
+        //is Run -> "Run:${data.turn}"
+            is Run -> buildString {
+                append("Run:${data.turn}-${data.toggleTargets}-${data.hasPreviousPassed}")
+            }
         is Win -> "Win:${data.winner}"
         is Draw -> "Draw:"
     }
 
     override fun deserialize(text: String): GameState {
-        val (type, player) = text.split(":")
+        val (type, content) = text.split(":")
         return when(type){
-            "Run" -> Run(Player.valueOf(player))
-            "Win" -> Win(Player.valueOf(player))
+            "Run" -> {
+                val (tr, tt, hpp) = content.split("-")
+                Run(Player.valueOf(tr), tt.toBoolean(), hpp.toBoolean())
+            }
+            "Win" -> Win(Player.valueOf(content))
             "Draw"-> Draw
             else -> error("Invalid game state $type")
         }
