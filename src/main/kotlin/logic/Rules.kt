@@ -10,61 +10,65 @@ private val directions = listOf(
 
 
 fun Game.validMoves(turn: Color): List<Position> {
-    val list = mutableSetOf<Position>()
     val opponent = turn.otherColor
 
-    for (p in board) {
-        if (p.value == opponent) {
-            for (d in directions) {
-                val pd = p.key.index + d
-
-                if (pd in 0 until BOARD_CELLS && board[Position(pd)] == null) {
-                    if (this.turnMoves(turn, Position(pd)).isNotEmpty()) {
-                        list.add(Position(pd))
-                    }
-                }
+    val l = board.entries.map { (c, p) ->
+        if (p == opponent){
+            directions.map{
+                val pd = c.index + it
+                if (pd in 0 until BOARD_CELLS &&
+                    board[Position(pd)] == null &&
+                    this.turnMoves(turn, Position(pd)).isNotEmpty()
+                    ) Position(pd)
+                else null
             }
         }
+        else emptyList()
     }
-    return list.toList()
+    return l.flatten().filterNotNull()
 }
 
-fun Game.turnMoves(turn: Color, move: Position): List<Pair<Position, Color>> {
-    val list = mutableSetOf<MutableList<Int>>()
+fun Game.turnMoves(turn: Color, move: Position): List<Pair<Position, Color>> =
+    directions.map{
+        this.turnMovesByDirection(turn, move, it)
+    }.flatten().distinct()
+
+private fun Game.turnMovesByDirection(turn: Color, move: Position, direction: Int = 0): List<Pair<Position, Color>> {
     val opponent = turn.otherColor
 
-    val idx = move.index
-    for (d in directions) {
-        val pd = idx + d
+    val idx = move.index + direction
+    val range = if (direction < 0) (idx downTo 0 step -direction)
+                 else (idx until BOARD_CELLS step direction)
 
-        if (pd in 0 until BOARD_CELLS && board[Position(pd)] == opponent) {
-            val l = mutableListOf<Int>()
-            l.add(pd)
-            var i = pd
-            while (i in 0 until BOARD_CELLS){
+    val list = mutableSetOf<Int>()
+    for (i in range) {
+        if (!inLine(idx, Position(i).index, direction)) break
 
-                if (d == 1 || d == -1) {
-                    if (!sameRow(i, i - d)) break
-                }
-
-                when (board[Position(i)]) {
-                    opponent -> l.add(i)
-                    turn -> {
-                        list += l
-                        break
-                    }
-                    else -> break
-                }
-
-                i += d
+        when (board[Position(i)]) {
+            opponent -> list.add(i)
+            turn -> {
+                return list.map { Position(it) to turn }
             }
+            else -> break
         }
     }
 
-    val turnList = list.flatten().distinct()
-    //return board.mapIndexed{ idx, player -> if (idx in turnList) turn else player }
-    return turnList.map { Pair(Position(it), turn) }
+    return emptyList()
 }
 
-private fun sameRow(a: Int, b: Int): Boolean =
-    (a / BOARD_SIZE) == (b / BOARD_SIZE)
+private fun inLine(idx1: Int, idx2: Int, direction: Int): Boolean {
+    val row1 = Position(idx1).row
+    val col1 = Position(idx1).column
+    val row2 = Position(idx2).row
+    val col2 = Position(idx2).column
+
+    return when (direction) {
+        1, -1 -> row1 == row2 // horizontal
+        BOARD_SIZE, -BOARD_SIZE -> col1 == col2 // vertical
+        BOARD_SIZE + 1 -> (row2 - row1) == (col2 - col1) // diagonal ↘
+        -BOARD_SIZE - 1 -> (row1 - row2) == (col1 - col2) // diagonal ↖
+        BOARD_SIZE - 1 -> (row2 - row1) == (col1 - col2) // diagonal ↙
+        -BOARD_SIZE + 1 -> (row1 - row2) == (col2 - col1) // diagonal ↗
+        else -> false
+    }
+}

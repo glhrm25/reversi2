@@ -6,14 +6,12 @@ import user_interface.*
     -> Game.kt:
        -- Review Game class primary constructor
        -- Adjust board and position logic. (should position be converted to an index?)
-       -- Game State should turn to "Draw" when there's no possible moves & players have the same amount of pieces or should it wait for "pass" command ?????
 
     -> Position.kt:
         -- What to do about the private constructor ???
 
     -> Rules.kt:
         -- Upgrade functions validMoves() and turnMoves() efficiency.
-        -- Fix bug on turnMoves and validMoves.
 
     -> Overall:
         -- Review requires and checks

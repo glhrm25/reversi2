@@ -6,8 +6,8 @@ val ROWS = (1 .. BOARD_SIZE).toList()
 
 class Position private constructor(val index: Int) {
 
-    private val row get() = ROWS[index / BOARD_SIZE]
-    private val column get() = COLUMNS[index % BOARD_SIZE]
+    val row get() = ROWS[index / BOARD_SIZE]
+    val column get() = COLUMNS[index % BOARD_SIZE]
 
     companion object {
         val values = List(BOARD_CELLS) { Position(it) }

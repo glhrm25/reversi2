@@ -17,7 +17,6 @@ data class Game (
     val name: String?,
 )
 
-
 data class Player(val color: Color, val toggleTargets: Boolean = false)
 
 sealed class GameState
@@ -59,11 +58,14 @@ fun Game.pass(): Game =
     }
 
 /**
+ * @param board The game's board
+ * @param state The game's actual state
+ * @param hasPreviousPassed If user passed his turn to the opponent
  * @return Updated state of the game
  */
-private fun updateState(board: Board, previousState: Run, hasPreviousPassed: Boolean = false): GameState =
+private fun updateState(board: Board, state: Run, hasPreviousPassed: Boolean = false): GameState =
     if (board.size != BOARD_CELLS)
-        Run(previousState.turn.otherColor, hasPreviousPassed)
+        Run(state.turn.otherColor, hasPreviousPassed)
     else
         getEndState(board)
 
@@ -80,7 +82,7 @@ private fun Board.mostCommonPieces(): Color? {
 }
 
 /**
- * @param board the game's board
+ * @param board The game's board
  * @return Gamestate Win or Draw, depending on the number of pieces on the board for each player
  */
 private fun getEndState(board: Board): GameState =
