@@ -23,9 +23,10 @@ class CommandsTests {
         game = game.pass()
         assertEquals(Run(turn = Color.WHITE, hasPreviousPassed = true), game.state)
         game = game.play(Position(BOARD_CELLS - 1))
-        assertEquals(Run(Color.BLACK), game.state)
-        game = game.pass()
         assertEquals(Win(Color.WHITE), game.state)
+        assertFailsWith<IllegalStateException> {
+            game = game.pass()
+        }
     }
     @Test
     fun `PASS command test with initial board`() {

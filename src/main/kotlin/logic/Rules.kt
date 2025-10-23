@@ -8,11 +8,8 @@ private val directions = listOf(
     BOARD_SIZE - 1, -BOARD_SIZE + 1, // slash
 )
 
-fun Game.validMoves(): List<Position> {
 
-    require(this.state is Run)
-    val turn = state.turn
-
+fun Game.validMoves(turn: Color): List<Position> {
     val list = mutableSetOf<Position>()
     val opponent = turn.otherColor
 
@@ -22,7 +19,7 @@ fun Game.validMoves(): List<Position> {
                 val pd = p.key.index + d
 
                 if (pd in 0 until BOARD_CELLS && board[Position(pd)] == null) {
-                    if (this.turnMoves(Position(pd)).isNotEmpty()) {
+                    if (this.turnMoves(turn, Position(pd)).isNotEmpty()) {
                         list.add(Position(pd))
                     }
                 }
@@ -32,11 +29,7 @@ fun Game.validMoves(): List<Position> {
     return list.toList()
 }
 
-fun Game.turnMoves(move: Position): List<Pair<Position, Color>> {
-
-    require(this.state is Run)
-    val turn = state.turn
-
+fun Game.turnMoves(turn: Color, move: Position): List<Pair<Position, Color>> {
     val list = mutableSetOf<MutableList<Int>>()
     val opponent = turn.otherColor
 

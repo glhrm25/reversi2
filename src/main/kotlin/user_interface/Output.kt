@@ -13,7 +13,8 @@ fun Game.show() {
     else println("You are player ${pl.color.symbol()} in game $name.")
 
     println("  " + COLUMNS.joinToString(" "))
-    val validMoves = validMoves()
+    val validMoves = if (state is Run) validMoves(this.state.turn) else emptyList()
+    //println(validMoves)
     Position.values
         .map{
             if (this.pl.toggleTargets && it in validMoves) TARGETS_SYMBOL

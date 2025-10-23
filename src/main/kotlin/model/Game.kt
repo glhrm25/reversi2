@@ -15,9 +15,8 @@ data class Game (
     val state: GameState = Run(firstTurn),
     //val score: Score = (Player.entries + null).associateWith { 0 }, // ????
     val name: String?,
-) {
-    // val validMoves get() = validMoves()
-}
+)
+
 
 data class Player(val color: Color, val toggleTargets: Boolean = false)
 
@@ -34,29 +33,27 @@ fun Game.new(): Game = Game(name = name, firstTurn = firstTurn.otherColor)
 
 fun Game.play(move: Position): Game {
     check(this.state is Run) {"Game has ended."}
-    if (this.name != null) check(state.turn == pl.color){"Not your turn"}
-    require(board[move] == null) { "Cell $move already occupied." }
-    require(move in validMoves()){"Invalid move $move."}
+    check(this.name == null || state.turn == pl.color){"Not your turn"}
+    require(move in validMoves(state.turn)){"Invalid move $move."}
 
-    val newState = updateState()
+    val newBoard = board + (move to state.turn) + turnMoves(state.turn, move)
     return this.copy(
-        board = board + (move to state.turn) + turnMoves(move),
-        state = if (newState is Run) newState.copy(hasPreviousPassed = false) else newState,
+        board = newBoard,
+        state = updateState(newBoard, state),
     )
 }
 
 fun Game.pass(): Game =
     with(this) {
         check(state is Run) {"Game has ended."}
-        check(validMoves().isEmpty()) { "There's possible moves for you to make." }
+        check(validMoves(state.turn).isEmpty()) { "There is possible moves for you to make." }
 
         if (state.hasPreviousPassed)
             copy(state = getEndState(board))
 
         else {
-            val newState = updateState()
             copy(
-                state = if (newState is Run) newState.copy(hasPreviousPassed = true) else newState,
+                state = updateState(board, state, true),
             )
         }
     }
@@ -64,9 +61,9 @@ fun Game.pass(): Game =
 /**
  * @return Updated state of the game
  */
-private fun Game.updateState(): GameState =
-    if (board.size != BOARD_CELLS && state is Run)
-        Run(state.turn.otherColor)
+private fun updateState(board: Board, previousState: Run, hasPreviousPassed: Boolean = false): GameState =
+    if (board.size != BOARD_CELLS)
+        Run(previousState.turn.otherColor, hasPreviousPassed)
     else
         getEndState(board)
 
