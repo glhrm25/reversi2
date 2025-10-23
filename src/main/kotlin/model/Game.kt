@@ -13,7 +13,7 @@ data class Game (
     val board: Board = generateBoard(),
     val state: GameState = Run(firstTurn),
     //val score: Score = (Player.entries + null).associateWith { 0 }, // ????
-    val name: String,
+    val name: String?,
 ) {
     // val validMoves get() = validMoves()
 }

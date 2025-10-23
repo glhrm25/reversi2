@@ -10,24 +10,45 @@ class Command (
     val execute: (List<String>, Game?, gs: GameStorage) -> Game? = {_, game, _ -> game},
 )
 
-private fun storageCommand(fx: (String, Game?) -> Game) = Command("<name>") {args, game, _ ->
-    val name = requireNotNull(args.firstOrNull()) {"Missing name"}
-    fx(name, game)
-}
+/**
+ * Updates the game file stored in the game storage if game is not a local game.
+ * @param game is current game to write on the file
+ * @param gs is GameStorage where it will be created or update the game's file
+ * @return Returns the game received
+ */
+private fun updateGameFile(game: Game, gs: GameStorage): Game =
+    game.also{
+        if (game.name != null) {
+            gs.update(game.name, game)
+        }
+    }
+
+/**
+ * Creates the game file stored in the game storage if game is not a local game.
+ * @param game is current game to write on the file
+ * @param gameStorage is GameStorage where it will be created or update the game's file
+ * @return Returns the game received
+ */
+private fun createGameFile(game: Game, gameStorage: GameStorage): Game =
+    game.also{
+        if (game.name != null) {
+            gameStorage.create(game.name, game)
+        }
+    }
 
 val new = Command("<FirstTurn> <Name>"){ args, game, gs ->
-    val argSymbol = if (args.isNotEmpty()) args.first()
-                    else "${Player.entries.random().symbol()}" // If first turn not mentioned, selects a random player
+    require(args.isNotEmpty()){"Missing arguments"}
+    val argSymbol = args.first()
     require(argSymbol.length == 1) {"Invalid argument $argSymbol"} // If argument is not a character
 
     val symbol = argSymbol.first()
-    require(symbol == BLACK_SYMBOL || symbol == WHITE_SYMBOL){"Invalid symbol $argSymbol."} // If symbol is not a valid symbol
+    require(symbol == BLACK_SYMBOL || symbol == WHITE_SYMBOL){"Invalid symbol $argSymbol"} // If symbol is not a valid symbol
 
-    val argName = args.drop(1) // if name not specified then game is a local game
-    val newGame = game?.new() ?: Game(firstTurn = symbol.player(), name = if (argName.isNotEmpty()) argName.first() else "local")
-    newGame.also {
-        gs.create(newGame.name, newGame)
-    }
+    val newGame = game?.new() ?: Game(firstTurn = symbol.player(), name = args.drop(1).firstOrNull())
+    if (newGame.name != null)
+        require(gs.read(newGame.name) == null){"Game ${newGame.name} already exists"}
+
+    createGameFile(newGame, gs)
 }
 
 val play = Command("<position>") { args, game, gs ->
@@ -35,10 +56,8 @@ val play = Command("<position>") { args, game, gs ->
    // val pos = requireNotNull(arg.toCellOrNull()) {"Invalid position $arg."}
     require(arg.length == 2) { "Invalid argument $arg." }
 
-    val newgame = checkNotNull(game){"Game not created"}.play(arg.toBoardPosition())
-    newgame.also{
-        gs.update(newgame.name, newgame)
-    }
+    val newGame = checkNotNull(game){"Game not created"}.play(arg.toBoardPosition())
+    updateGameFile(newGame, gs)
 }
 
 val show = Command {_, game, _ ->
@@ -49,18 +68,14 @@ val targets = Command{_, game, gs ->
     checkNotNull(game){"Game not created"}
     with(game){
         check(state is Run) {"Game has ended."}
-        val newgame = copy(state = state.copy(toggleTargets = !state.toggleTargets))
-        newgame.also{
-            gs.update(newgame.name, newgame)
-        }
+        val newGame = copy(state = state.copy(toggleTargets = !state.toggleTargets))
+        updateGameFile(newGame, gs)
     }
 }
 
 val pass = Command{_, game, gs ->
-    val newgame = checkNotNull(game){"Game not created"}.pass()
-    newgame.also{
-        gs.update(newgame.name, newgame)
-    }
+    val newGame = checkNotNull(game){"Game not created"}.pass()
+    updateGameFile(newGame, gs)
 }
 
 val join = Command("<Name>"){args, _, gs ->
@@ -71,7 +86,8 @@ val join = Command("<Name>"){args, _, gs ->
 }
 
 val refresh = Command{_, game, gs ->
-    requireNotNull(game){"Game is not running"}
+    checkNotNull(game){"Game is not running"}
+    checkNotNull(game.name){"This command is not valid on a local game."}
     gs.read(game.name)
 }
 
