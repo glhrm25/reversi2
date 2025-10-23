@@ -13,7 +13,7 @@ import user_interface.*
        -- Adjust board and position logic. (should position be converted to an index?)
        -- Game State should turn to "Draw" when there's no possible moves & players have the same amount of pieces or should it wait for "pass" command ?????
        -- Fix bug on turnMoves and validMoves.
-       -- Review gameState Run constructor. Maybe redo player's class with those constructors???
+       -- Review gameState Run constructor. toggleTargets should be a property of Player and not Run Gamestate
 
     -> Position.kt:
         -- What to do about the private constructor ???
@@ -31,7 +31,7 @@ fun main() {
 
     var game: Game? = null
     val gameStorage = TextFileStorage<String, Game>("games", GameSerializer)
-    val cmds: Map<String, Command> = getCommands(gameStorage)
+    val cmds: Map<String, Command> = getCommands()
 
     while(true) {
         val (name, args) = readCommand()
@@ -40,7 +40,7 @@ fun main() {
         if (command == null) println("Invalid command $name")
 
         else try {
-            game = command.execute(args, game)
+            game = command.execute(args, game, gameStorage)
             if (command.isTerminate) {
                 println("Game ended.")
                 return
