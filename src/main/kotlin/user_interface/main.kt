@@ -1,11 +1,13 @@
+package user_interface
+
 import model.*
 import storage.TextFileStorage
-import user_interface.*
 
 /* TO-DO LIST:
     -> Game.kt:
        -- Review Game class primary constructor
        -- Adjust board and position logic. (should position be converted to an index?)
+       -- Create subclass "runpassed", representing the hasPreviousPassed boolean
 
     -> Position.kt:
         -- What to do about the private constructor ???
@@ -15,8 +17,6 @@ import user_interface.*
 
     -> Overall:
         -- Review requires and checks
-        -- Finish details off Multiplayer:
-            What happens when a third instance tries to join ????
  */
 
 fun main() {

@@ -15,15 +15,13 @@ data class Game (
     val name: String? = "",
 )
 
-data class Player(val color: Color, val toggleTargets: Boolean = false)
-
 sealed class GameState
 data class Run(
     val turn: Color,
     val hasPreviousPassed: Boolean = false,
 ): GameState()
 data class Win(val winner: Color): GameState()
-data object Draw: GameState()
+object Draw: GameState()
 
 // If game already exists, new game is created with same name and first turn corresponds to the opposite player
 fun Game.new(): Game = Game(name = name, owner = owner.otherColor)
