@@ -7,6 +7,7 @@ typealias GameStorage = Storage<String, Game>
 class Command (
     val syntaxArgs: String = "",
     val isTerminate: Boolean = false,
+    val isShow : Boolean = true,
     val execute: (List<String>, Game?, gs: GameStorage) -> Game? = {_, game, _ -> game},
 )
 
@@ -62,11 +63,11 @@ private val play = Command("<position>") { args, game, gs ->
     updateGameFile(newGame, gs)
 }
 
-private val show = Command {_, game, _ ->
+private val show = Command(isShow = false) {_, game, _ ->
     game.also{ checkNotNull(game){"Game not created."}.show() }
 }
 
-private val targets = Command("<ON/OFF>"){args, game, _ ->
+private val targets = Command("<ON/OFF>", isShow = false){args, game, _ ->
     checkNotNull(game){"Game not created"}
     check(args.isNotEmpty()){"Targets = ${game.pl.toggleTargets.toOnOrOff()}"}
     val targets = args.first().uppercase()

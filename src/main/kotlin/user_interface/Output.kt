@@ -6,7 +6,7 @@ import model.Color.*
 const val BLACK_SYMBOL = '#'
 const val WHITE_SYMBOL = '@'
 const val EMPTY_SYMBOL = '.'
-const val TARGETS_SYMBOL = '?'
+const val TARGETS_SYMBOL = '*'
 
 fun Game.show() {
     if (this.name == null && state is Run) println("You are player ${state.turn.symbol()} in local game.")

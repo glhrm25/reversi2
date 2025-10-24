@@ -37,6 +37,7 @@ fun main() {
                 println("Game ended.")
                 return
             }
+            if (command.isShow) game?.show()
         }
         catch (ex: IllegalArgumentException) {
             println(ex.message)
@@ -44,6 +45,5 @@ fun main() {
         } catch (ex: IllegalStateException) {
             println(ex.message)
         }
-       // game?.show()
     }
 }

@@ -6,14 +6,12 @@ const val BOARD_SIZE = 8 // Sets the number of rows and columns of the board
 const val BOARD_CELLS = BOARD_SIZE * BOARD_SIZE
 
 typealias Board = Map<Position, Color>
-//typealias Score = Map<Player?, Int>
 
 data class Game (
     val firstTurn : Color = BLACK,
     val pl : Player = Player(firstTurn),
     val board: Board = generateBoard(),
     val state: GameState = Run(firstTurn),
-    //val score: Score = (Player.entries + null).associateWith { 0 }, // ????
     val name: String?,
 )
 
