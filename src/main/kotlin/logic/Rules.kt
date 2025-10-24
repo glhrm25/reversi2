@@ -53,7 +53,7 @@ private fun Game.turnMovesByDirection(turn: Color, move: Position, direction: In
             }
         }
     }
-    return emptyList() // Returns emptyList if it couldn't find a player's piece on the same line/column/diagonal.
+    return emptyList() // Returns emptyList if it couldn't find a player's piece on the same line/column/diagonal has the move.
 }
 
 private fun inLine(idx1: Int, idx2: Int, direction: Int): Boolean {

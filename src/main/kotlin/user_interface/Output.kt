@@ -13,7 +13,7 @@ fun Game.show() {
     else println("You are player ${pl.color.symbol()} in game $name.")
 
     println("  " + COLUMNS.joinToString(" "))
-    val validMoves = if (state is Run) validMoves(this.state.turn) else emptyList()
+    val validMoves = if (state is Run) validMoves(this.state.turn).toSet() else emptySet()
     //println(validMoves)
     Position.values
         .map{

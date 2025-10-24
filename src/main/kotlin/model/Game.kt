@@ -12,7 +12,7 @@ data class Game (
     val pl : Player = Player(owner),
     val board: Board = generateBoard(),
     val state: GameState = Run(owner),
-    val name: String? = "",
+    val name: String? = "", // TO-DO: Change this to a derivative class of Run with a property "name"
 )
 
 sealed class GameState
@@ -21,7 +21,7 @@ data class Run(
     val hasPreviousPassed: Boolean = false,
 ): GameState()
 data class Win(val winner: Color): GameState()
-object Draw: GameState()
+data object Draw: GameState()
 
 // If game already exists, new game is created with same name and first turn corresponds to the opposite player
 fun Game.new(): Game = Game(name = name, owner = owner.otherColor)
