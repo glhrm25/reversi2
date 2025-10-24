@@ -8,11 +8,11 @@ const val BOARD_CELLS = BOARD_SIZE * BOARD_SIZE
 typealias Board = Map<Position, Color>
 
 data class Game (
-    val firstTurn : Color = BLACK,
-    val pl : Player = Player(firstTurn),
+    val owner : Color = BLACK,
+    val pl : Player = Player(owner),
     val board: Board = generateBoard(),
-    val state: GameState = Run(firstTurn),
-    val name: String?,
+    val state: GameState = Run(owner),
+    val name: String? = "",
 )
 
 data class Player(val color: Color, val toggleTargets: Boolean = false)
@@ -26,7 +26,7 @@ data class Win(val winner: Color): GameState()
 data object Draw: GameState()
 
 // If game already exists, new game is created with same name and first turn corresponds to the opposite player
-fun Game.new(): Game = Game(name = name, firstTurn = firstTurn.otherColor)
+fun Game.new(): Game = Game(name = name, owner = owner.otherColor)
 
 fun Game.play(move: Position): Game {
     check(this.state is Run) {"Game has ended."}

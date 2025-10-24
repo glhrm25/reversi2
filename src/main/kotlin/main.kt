@@ -37,7 +37,7 @@ fun main() {
                 println("Game ended.")
                 return
             }
-            if (command.isShow) game?.show()
+            if (command.toShow) game?.show()
         }
         catch (ex: IllegalArgumentException) {
             println(ex.message)

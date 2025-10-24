@@ -7,7 +7,7 @@ typealias GameStorage = Storage<String, Game>
 class Command (
     val syntaxArgs: String = "",
     val isTerminate: Boolean = false,
-    val isShow : Boolean = true,
+    val toShow : Boolean = true,
     val execute: (List<String>, Game?, gs: GameStorage) -> Game? = {_, game, _ -> game},
 )
 
@@ -47,7 +47,7 @@ private val new = Command("<FirstTurn> <Name>"){ args, game, gs ->
     val symbol = argSymbol.first()
     require(symbol == BLACK_SYMBOL || symbol == WHITE_SYMBOL){"Invalid symbol $argSymbol"} // If symbol is not a valid symbol
 
-    val newGame = game?.new() ?: Game(firstTurn = symbol.player(), name = args.drop(1).firstOrNull())
+    val newGame = game?.new() ?: Game(owner = symbol.player(), name = args.drop(1).firstOrNull())
     if (newGame.name != null)
         require(gs.read(newGame.name) == null){"Game ${newGame.name} already exists"}
 
@@ -63,11 +63,11 @@ private val play = Command("<position>") { args, game, gs ->
     updateGameFile(newGame, gs)
 }
 
-private val show = Command(isShow = false) {_, game, _ ->
+private val show = Command(toShow = false) { _, game, _ ->
     game.also{ checkNotNull(game){"Game not created."}.show() }
 }
 
-private val targets = Command("<ON/OFF>", isShow = false){args, game, _ ->
+private val targets = Command("<ON/OFF>", toShow = false){ args, game, _ ->
     checkNotNull(game){"Game not created"}
     check(args.isNotEmpty()){"Targets = ${game.pl.toggleTargets.toOnOrOff()}"}
     val targets = args.first().uppercase()
@@ -88,7 +88,7 @@ private val join = Command("<Name>"){args, _, gs ->
     require(args.isNotEmpty()){"Missing game's name"}
     val name = args.first()
     val game = gs.read(name)
-    checkNotNull(game){"Game $name is not running."}.copy(pl = Player(game.firstTurn.otherColor))
+    checkNotNull(game){"Game $name is not running."}.copy(name = name, pl = Player(game.owner.otherColor))
 }
 
 private val refresh = Command{_, game, gs ->
