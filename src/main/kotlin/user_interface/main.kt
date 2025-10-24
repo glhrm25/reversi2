@@ -7,7 +7,7 @@ import storage.TextFileStorage
     -> Game.kt:
        -- Review Game class primary constructor
        -- Adjust board and position logic. (should position be converted to an index?)
-       -- Create subclass "runpassed", representing the hasPreviousPassed boolean
+       -- Create subclass "runpassed", representing the hasPreviousPassed boolean -> Dúvida para a próx. aula.
 
     -> Position.kt:
         -- What to do about the private constructor ???

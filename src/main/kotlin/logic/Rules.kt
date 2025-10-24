@@ -40,20 +40,20 @@ private fun Game.turnMovesByDirection(turn: Color, move: Position, direction: In
     val range = if (direction < 0) (idx downTo 0 step -direction)
                  else (idx until BOARD_CELLS step direction)
 
-    val list = mutableSetOf<Int>()
-    for (i in range) {
-        if (!inLine(idx, Position(i).index, direction)) break
+    buildList {
+        for (i in range) {
+            if (!inLine(idx, Position(i).index, direction)) break
 
-        when (board[Position(i)]) {
-            opponent -> list.add(i)
-            turn -> {
-                return list.map { Position(it) to turn }
+            when (board[Position(i)]) {
+                opponent -> add(i)
+                turn -> {
+                    return this.map { Position(it) to turn }
+                }
+                else -> break
             }
-            else -> break
         }
     }
-
-    return emptyList()
+    return emptyList() // Returns emptyList if it couldn't find a player's piece on the same line/column/diagonal.
 }
 
 private fun inLine(idx1: Int, idx2: Int, direction: Int): Boolean {
