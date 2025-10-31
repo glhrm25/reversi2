@@ -9,26 +9,24 @@ typealias Board = Map<Position, Color>
 
 data class Game (
     val owner : Color = BLACK,
-    val pl : Player = Player(owner),
+    //val pl : Player = Player(owner), // ????
     val board: Board = generateBoard(),
     val state: GameState = Run(owner),
-    val name: String? = "", // TO-DO: Change this to a derivative class of Run with a property "name"
 )
 
 sealed class GameState
 data class Run(
     val turn: Color,
-    val hasPreviousPassed: Boolean = false,
+    val hasPreviousPassed: Boolean = false, // TO-DO: Change this to a derivative class of Run called RunPassed
 ): GameState()
 data class Win(val winner: Color): GameState()
 data object Draw: GameState()
 
 // If game already exists, new game is created with same name and first turn corresponds to the opposite player
-fun Game.new(): Game = Game(name = name, owner = owner.otherColor)
+//fun Game.new(own: Color): Game = Game(owner = own)
 
 fun Game.play(move: Position): Game {
     check(this.state is Run) {"Game has ended."}
-    check(this.name == null || state.turn == pl.color){"Not your turn"}
     require(move in validMoves(state.turn)){"Invalid move $move."}
 
     val newBoard = board + (move to state.turn) + turnMoves(state.turn, move)

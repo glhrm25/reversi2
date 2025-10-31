@@ -8,6 +8,7 @@ import storage.TextFileStorage
        -- Review Game class primary constructor
        -- Adjust board and position logic. (should position be converted to an index?)
        -- Create subclass "runpassed", representing the hasPreviousPassed boolean -> Dúvida para a próx. aula.
+       -- Rethink function game.new()
 
     -> Position.kt:
         -- What to do about the private constructor ???
@@ -17,12 +18,16 @@ import storage.TextFileStorage
 
     -> Overall:
         -- Review requires and checks
+        -- Delete files when exiting the app.
+        -- What to do about ClashRunLocal game storage?
  */
+
+private const val gamesDirectory = "games"
 
 fun main() {
 
-    var game: Game? = null
-    val gameStorage = TextFileStorage<String, Game>("games", GameSerializer)
+    val gameStorage = TextFileStorage<Name, Game>(gamesDirectory, GameSerializer)
+    var clash = Clash(gameStorage)
 
     val cmds: Map<String, Command> = getCommands()
     while(true) {
@@ -32,12 +37,12 @@ fun main() {
         if (command == null) println("Invalid command $name")
 
         else try {
-            game = command.execute(args, game, gameStorage)
+            clash = command.execute(clash, args)
             if (command.isTerminate) {
                 println("Game ended.")
                 return
             }
-            if (command.toShow) game?.show()
+            if (command.toShow) clash.show()
         }
         catch (ex: IllegalArgumentException) {
             println(ex.message)

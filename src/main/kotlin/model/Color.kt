@@ -8,7 +8,7 @@ enum class Color {
 
 val Color.otherColor: Color get() = if (this == BLACK) WHITE else BLACK
 
-fun Char.player(): Color = if (this == BLACK_SYMBOL) BLACK else WHITE
+fun Char.color(): Color = if (this == BLACK_SYMBOL) BLACK else WHITE
 
 fun String.toColor(): Color = Color.valueOf(this)
 

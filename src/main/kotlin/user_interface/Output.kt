@@ -8,16 +8,12 @@ const val WHITE_SYMBOL = '@'
 const val EMPTY_SYMBOL = '.'
 const val TARGETS_SYMBOL = '*'
 
-fun Game.show() {
-    if (this.name == null && state is Run) println("You are player ${state.turn.symbol()} in local game.")
-    else println("You are player ${pl.color.symbol()} in game $name.")
-
+fun Game.show(targets: Boolean) {
     println("  " + COLUMNS.joinToString(" "))
     val validMoves = if (state is Run) validMoves(this.state.turn).toSet() else emptySet()
-    //println(validMoves)
     Position.values
         .map{
-            if (this.pl.toggleTargets && it in validMoves) TARGETS_SYMBOL
+            if (targets && it in validMoves) TARGETS_SYMBOL
             else board[it].symbol()
         }
         .chunked(BOARD_SIZE)
@@ -39,3 +35,16 @@ fun Color?.symbol(): Char =
         WHITE -> WHITE_SYMBOL
         else -> EMPTY_SYMBOL
     }
+
+fun ClashRunLocal.showHeader(){
+    if (game.state is Run) println("You are player ${game.state.turn.symbol()} in local game.")
+}
+fun ClashRun.showHeader(){
+    println("You are player ${side.color.symbol()} in game $name.")
+}
+
+fun Clash.showTargets() {
+    if (this is ClashRun) println("Targets = ${side.toggleTargets.toOnOrOff()}")
+}
+
+fun Boolean.toOnOrOff() = if (this) "On" else "Off"
