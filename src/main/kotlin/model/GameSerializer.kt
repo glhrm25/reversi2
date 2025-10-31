@@ -30,7 +30,8 @@ object StateSerializer: Serializer<GameState> {
     override fun serialize(data: GameState): String =
         when(data) {
             is Run -> buildString {
-                append("Run:${data.turn}-${data.hasPreviousPassed}")
+                if (data is RunPassed) append("RunPassed:${data.turn}")
+                else append("Run:${data.turn}")
             }
         is Win -> "Win:${data.winner}"
         is Draw -> "Draw:"
@@ -40,8 +41,10 @@ object StateSerializer: Serializer<GameState> {
         val (type, content) = text.split(":")
         return when(type){
             "Run" -> {
-                val (tr, hpp) = content.split("-")
-                Run(Color.valueOf(tr), hpp.toBoolean())
+                Run(Color.valueOf(content))
+            }
+            "RunPassed" -> {
+                RunPassed(Color.valueOf(content))
             }
             "Win" -> Win(Color.valueOf(content))
             "Draw"-> Draw

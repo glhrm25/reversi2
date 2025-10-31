@@ -7,11 +7,6 @@ class Command (
     val toShow : Boolean = true,
     val execute: Clash.(args: List<String>) -> Clash = {this},
 )
-/*
-fun clashCommand(fx: Clash.(Name)->Clash) = Command("<name>") { args ->
-    val arg = requireNotNull(args.firstOrNull()) { "Missing name" }
-    fx(Name(arg))
-}*/
 
 private val new = Command("<FirstTurn> <Name>"){ args ->
     require(args.isNotEmpty()){"Missing arguments"}

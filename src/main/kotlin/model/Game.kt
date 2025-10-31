@@ -2,28 +2,24 @@ package model
 import model.Color.*
 import logic.*
 
-const val BOARD_SIZE = 8 // Sets the number of rows and columns of the board
+const val BOARD_SIZE = 3 // Sets the number of rows and columns of the board
 const val BOARD_CELLS = BOARD_SIZE * BOARD_SIZE
 
 typealias Board = Map<Position, Color>
 
 data class Game (
     val owner : Color = BLACK,
-    //val pl : Player = Player(owner), // ????
     val board: Board = generateBoard(),
     val state: GameState = Run(owner),
 )
 
 sealed class GameState
-data class Run(
+open class Run(
     val turn: Color,
-    val hasPreviousPassed: Boolean = false, // TO-DO: Change this to a derivative class of Run called RunPassed
 ): GameState()
+class RunPassed(tr: Color): Run(tr)
 data class Win(val winner: Color): GameState()
 data object Draw: GameState()
-
-// If game already exists, new game is created with same name and first turn corresponds to the opposite player
-//fun Game.new(own: Color): Game = Game(owner = own)
 
 fun Game.play(move: Position): Game {
     check(this.state is Run) {"Game has ended."}
@@ -41,12 +37,12 @@ fun Game.pass(): Game =
         check(state is Run) {"Game has ended."}
         check(validMoves(state.turn).isEmpty()) { "There is possible moves for you to make." }
 
-        if (state.hasPreviousPassed)
+        if (state is RunPassed)
             copy(state = getEndState(board))
 
         else {
             copy(
-                state = updateState(board, state, true),
+                state = RunPassed(state.turn.otherColor)
             )
         }
     }
@@ -54,12 +50,11 @@ fun Game.pass(): Game =
 /**
  * @param board The game's board
  * @param state The game's actual state
- * @param hasPreviousPassed If user passed his turn to the opponent
  * @return Updated state of the game
  */
-private fun updateState(board: Board, state: Run, hasPreviousPassed: Boolean = false): GameState =
+private fun updateState(board: Board, state: Run): GameState =
     if (board.size != BOARD_CELLS)
-        Run(state.turn.otherColor, hasPreviousPassed)
+        Run(state.turn.otherColor)
     else
         getEndState(board)
 
