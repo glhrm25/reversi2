@@ -5,10 +5,11 @@ import storage.TextFileStorage
 
 /* TO-DO LIST:
     -> Game.kt:
-       -- Review Game class primary constructor
        -- Adjust board and position logic. (should position be converted to an index?)
-       -- Create subclass "runpassed", representing the hasPreviousPassed boolean -> Dúvida para a próx. aula.
-       -- Rethink function game.new()
+       -- Is "NEW" command possible when the player is not the game owner ???
+
+    -> Clash.kt: !!!!
+       -- Rethink Clash.show(), Clash.showTargets() - Don't repeat code
 
     -> Position.kt:
         -- What to do about the private constructor ???
@@ -18,8 +19,7 @@ import storage.TextFileStorage
 
     -> Overall:
         -- Review requires and checks
-        -- Delete files when exiting the app.
-        -- What to do about ClashRunLocal game storage?
+        -- What to do about ClashRunLocal game storage????
  */
 
 private const val gamesDirectory = "games"

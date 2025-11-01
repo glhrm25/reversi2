@@ -40,11 +40,8 @@ fun Game.pass(): Game =
         if (state is RunPassed)
             copy(state = getEndState(board))
 
-        else {
-            copy(
-                state = RunPassed(state.turn.otherColor)
-            )
-        }
+        else
+            copy(state = RunPassed(state.turn.otherColor))
     }
 
 /**
@@ -80,7 +77,6 @@ private fun getEndState(board: Board): GameState =
         BLACK -> Win(BLACK)
         else -> Draw
     }
-
 
 /**
  * @return Starting board with its middle cells already occupied with the players pieces.

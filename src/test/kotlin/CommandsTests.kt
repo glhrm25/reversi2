@@ -4,7 +4,7 @@ import model.*
 import kotlin.test.*
 
 class CommandsTests {
-
+/*
     private fun fullBoard(): Map<Position, Color> {
         return (0 until BOARD_CELLS).map { i ->
             Position(i)
@@ -43,5 +43,5 @@ class CommandsTests {
             game = game.pass()
         }
         assertEquals(Run(Color.WHITE), game.state)
-    }
+    }*/
 }

@@ -18,10 +18,7 @@ private val new = Command("<FirstTurn> <Name>"){ args ->
 
     val argName = args.drop(1).firstOrNull()
 
-    new(
-        name = argName?.let { Name(it) },
-        owner = symbol.color()
-    )
+    new(name = argName?.let { Name(it) }, owner = symbol.color()).also { deleteIfOwner() }
 }
 
 private val play = Command("<position>") { args ->
@@ -33,7 +30,7 @@ private val play = Command("<position>") { args ->
 }
 
 private val targets = Command("<ON/OFF>", toShow = false){ args ->
-    if (args.isEmpty()) this.also{ showTargets() }
+    if (args.isEmpty()) this.also{ showPlayersTargetsConfig() }
     else {
         val arg = args.first().uppercase()
         require((arg == "ON") || (arg == "OFF")){"Invalid argument"}
@@ -43,11 +40,11 @@ private val targets = Command("<ON/OFF>", toShow = false){ args ->
 
 private val join = Command("<Name>"){args ->
     require(args.isNotEmpty()){"Missing game's name"}
-    join(Name(args.first()))
+    join(Name(args.first())).also { deleteIfOwner() }
 }
 
 fun getCommands() = mapOf(
-    "EXIT" to Command(isTerminate = true),
+    "EXIT" to Command(isTerminate = true){_ -> this.also { deleteIfOwner() }},
     "NEW" to new,
     "PLAY" to play,
     "SHOW" to Command(toShow = false) { _ -> this.also{ show() } },

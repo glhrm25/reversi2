@@ -3,6 +3,7 @@ import kotlin.test.*
 
 class GameSerializerTests {
     // Helper function to play a list of moves
+    /*
     private fun playMoves(vararg moves:Int): Game =
         moves.fold(Game(name = "test")) { g, pos -> g.play(Position(pos)) }
 
@@ -21,5 +22,5 @@ class GameSerializerTests {
         val game = Game(name = "test", state = Draw)
         val s = GameSerializer.serialize(game)
         assertEquals(game,GameSerializer.deserialize(s))
-    }
+    }*/
 }

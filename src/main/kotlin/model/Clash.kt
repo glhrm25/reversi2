@@ -3,6 +3,7 @@ package model
 import storage.Storage
 import user_interface.show
 import user_interface.showHeader
+import user_interface.showTargets
 
 typealias GameStorage = Storage<Name, Game>
 
@@ -15,6 +16,9 @@ open class Clash (val gs: GameStorage) {
         notStarted()
     }
     open fun targets(t: Boolean): Clash {
+        notStarted()
+    }
+    open fun showPlayersTargetsConfig(){
         notStarted()
     }
     open fun refresh(): Clash {
@@ -32,7 +36,7 @@ open class Clash (val gs: GameStorage) {
 
     fun join(name: Name): Clash {
         val g = gs.read(name)
-        checkNotNull(g){"Game $name is not running."}
+        checkNotNull(g){"Game $name does not exist"}
         return ClashRun(gs, name, Player(g.owner.otherColor), g)
     }
 }
@@ -54,11 +58,15 @@ class ClashRun(
             gs.update(name, it.game)
         }
 
-    override fun refresh(): Clash =
-        this.copy(game = gs.read(name)!!) // Game is never null at this point
+    override fun refresh() =
+        copy( game = gs.read(name)?.also { check(it != game) { "No changes" } }
+            ?: error("Game not found")
+        )
 
     override fun targets(t: Boolean) =
         this.copy(side = side.copy(toggleTargets = t))
+
+    override fun showPlayersTargetsConfig() = showTargets(side)
 
     override fun show(): Clash =
         this.also {
@@ -91,6 +99,8 @@ class ClashRunLocal(
     override fun targets(t: Boolean) =
         this.copy(side = side.copy(toggleTargets = t))
 
+    override fun showPlayersTargetsConfig() = showTargets(side)
+
     override fun show(): Clash =
         this.also {
             this.showHeader()
@@ -102,6 +112,17 @@ class ClashRunLocal(
              side: Player = this.side)
             = ClashRunLocal(gs, game, side)
 }
+
+fun Clash.deleteIfOwner() {
+    if (this is ClashRun && side.color == this.game.owner) gs.delete(name)
+}
+/*
+fun ClashRun.newAvailable() =
+    side.color == when(val state = game.state) {
+        is Run -> state.turn
+        else -> game.owner
+    }
+*/
 /*
 /**
  * Updates the game file stored in the game storage if game is not a local game.

@@ -36,15 +36,27 @@ fun Color?.symbol(): Char =
         else -> EMPTY_SYMBOL
     }
 
-fun ClashRunLocal.showHeader(){
+fun ClashRunLocal.showHeader() {
     if (game.state is Run) println("You are player ${game.state.turn.symbol()} in local game.")
 }
-fun ClashRun.showHeader(){
-    println("You are player ${side.color.symbol()} in game $name.")
-}
 
-fun Clash.showTargets() {
-    if (this is ClashRun) println("Targets = ${side.toggleTargets.toOnOrOff()}")
-}
+fun ClashRun.showHeader() =
+    println("You are player ${side.color.symbol()} in game $name.")
+/*
+fun Clash.show() =
+    when(this){
+        is ClashRun -> {
+            this.showHeader()
+            game.show(side.toggleTargets)
+        }
+        is ClashRunLocal -> {
+            this.showHeader()
+            game.show(side.toggleTargets)
+        }
+        else -> notStarted()
+    }
+*/
+fun showTargets(side: Player) =
+    println("Targets = ${side.toggleTargets.toOnOrOff()}")
 
 fun Boolean.toOnOrOff() = if (this) "On" else "Off"
